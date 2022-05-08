@@ -7,5 +7,4 @@ class AppColors {
   static const Color header = Colors.black;
   static Color? buttonRed = Colors.red[700];
   static Color? textGreen = Colors.teal[800];
-
 }
