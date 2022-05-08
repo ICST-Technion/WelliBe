@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/services/database.dart';
 import '../assets/wellibe_colors.dart';
 import '../services/auth.dart';
@@ -15,13 +16,15 @@ class ViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: TestPage(),
     );
   }
 }
 
 class TestPage extends StatefulWidget {
+  const TestPage({Key? key}) : super(key: key);
+
   @override
   _TestPageState createState() => _TestPageState();
 }
@@ -30,7 +33,7 @@ class _TestPageState extends State<TestPage> {
   final AuthService _auth = AuthService();
 
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  DateTime _selectedDay = DateTime.now();
 
   bool _isVisible = false;
 
@@ -43,8 +46,9 @@ class _TestPageState extends State<TestPage> {
   List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(DateTime date){
     List<DoctorsList> doctorsList = [];
+    int i = 0;
     for(int i=0; i<20; i++) {
-      doctorsList.add(const DoctorsList());
+      doctorsList.add(DoctorsList());
     }
     return doctorsList;
   }
@@ -163,7 +167,7 @@ class _TestPageState extends State<TestPage> {
                 color: Colors.white,
                 child: ListView(
                     //children: buildList(DateTime.now()),
-                  children: buildList(_selectedDay!),
+                  children: buildList(_selectedDay),
                 ),
                 //alignment: Alignment.topRight,
               )
@@ -215,17 +219,17 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
                       color: Colors.transparent,
                       width: 130,
                       height: 30,
-                      child: AutoSizeText(
-                        name,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize:16,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                      )
+                          child: AutoSizeText(
+                            name,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize:16,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                          ),
                   ),
                   Container(
                       color: Colors.transparent,
@@ -320,7 +324,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
 
 
 class DoctorsList extends StatefulWidget {
-  const DoctorsList({Key? key}) : super(key: key);
+  //const DoctorsList({required int counter});
 
   @override
   _DoctorsListState createState() => _DoctorsListState();
@@ -328,6 +332,7 @@ class DoctorsList extends StatefulWidget {
 
 class _DoctorsListState extends State<DoctorsList> {
   bool _isVisible = false;
+  String uid = '0';
 
   void showToast() {
     setState(() {
@@ -399,7 +404,8 @@ class _DoctorsListState extends State<DoctorsList> {
                             ),
                             FlatButton(
                               onPressed: () {
-                                //navigate to user profile page
+                                //navigate to doctors page
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(uid: uid,)));
                               },
                               child: const Text(
                                 "צפייה בפרופיל",

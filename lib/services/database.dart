@@ -24,23 +24,44 @@ class DatabaseService {
 
     //updates the parameters i added to firebase...
     return await usersInfoCollection.doc(uid).set({
-    'url' : "firebase",
+    'url' : 'https://www.shareicon.net/data/128x128/2015/09/24/106425_man_512x512.png',
     'name' : "firebase",
   });
   }
-  Future updateDoctorData(String url, String name) async {
-    //updates firebases build in parameters
-    _auth.getCurrentUser()?.updateProfile(displayName: name, photoURL: url); //changes the displayName but doesnt show up in firebase
 
+  Future addDoctor() async {
+
+  }
+
+  Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add) async {
+    //updates firebases build in parameters
     //updates the parameters i added to firebase...
-    return await usersInfoCollection.doc(uid).set({
-      'url' : "firebase",
-      'name' : "firebase",
+    return await doctorsInfoCollection.doc(uid).set({
+      'url' : url,
+      'name' : name,
+      'speciality' : spec,
+      'position' : pos,
+      'languages' : lan,
+      'additional_info' : add,
     });
   }
 
 
   Stream<String> getUserNameInner() {
+    return usersInfoCollection
+        .doc(uid)
+        .snapshots()
+        .map((doc) {
+      if (doc['name'] is String &&
+          (doc['name'] as String).isNotEmpty) {
+        return doc['name'];
+      } else {
+        return 'אנונימי';
+      }
+    });
+  }
+
+  Stream<String> getDoctorNameInner() {
     return usersInfoCollection
         .doc(uid)
         .snapshots()

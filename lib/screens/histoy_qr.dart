@@ -37,6 +37,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
+   // _data.updateDoctorData("סתם", "רעות", "עיניים של ילדים", "רופאת עיניים", "עברית, אנגלית", "שונאת חתולים");
+    print(_auth.getCurrentUser()?.uid);
 
     return MaterialApp(
         home: Scaffold(
@@ -63,7 +65,7 @@ class _HomeState extends State<Home> {
                           child: IconButton(
                             iconSize: 30,
                             padding: const EdgeInsets.only(top: 40, left: 260),
-                            icon: Image.network('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg'),//_auth.returnUrl()),
+                            icon: Image.network('https://www.shareicon.net/data/128x128/2015/09/24/106425_man_512x512.png'),//_auth.returnUrl()),
                             onPressed: () {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => PatientsPage()));
                                },
