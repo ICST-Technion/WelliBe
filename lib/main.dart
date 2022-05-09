@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'qr_scanning_page.dart';
 //import 'package:intl/date_symbol_data_http_request.dart';
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
