@@ -33,16 +33,17 @@ class DatabaseService {
 
   }
 
-  Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add) async {
+  Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add, String email) async {
     //updates firebases build in parameters
     //updates the parameters i added to firebase...
-    return await doctorsInfoCollection.doc(uid).set({
+    return await doctorsInfoCollection.doc(email).set({
       'url' : url,
       'name' : name,
       'speciality' : spec,
       'position' : pos,
       'languages' : lan,
       'additional_info' : add,
+      'email' : email,
     });
   }
 
@@ -61,9 +62,18 @@ class DatabaseService {
     });
   }
 
-  Stream<String> getDoctorNameInner() {
-    return usersInfoCollection
-        .doc(uid)
+  Stream<String> getDocEmailFromCount(int counter){
+    var duid;
+    return usersInfoCollection.doc(uid).snapshots().map((doc) {
+      duid = doc['doctors'][counter]["email"];
+      return duid;
+  });
+  }
+
+  //return doctors name based on his unique value
+  Stream<String> getDoctorNameInner(String email) {
+    return doctorsInfoCollection
+        .doc(email)
         .snapshots()
         .map((doc) {
       if (doc['name'] is String &&

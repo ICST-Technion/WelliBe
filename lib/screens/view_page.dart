@@ -11,6 +11,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import 'histoy_qr.dart';
 
+final AuthService _auth = AuthService();
+
 class ViewPage extends StatelessWidget {
   const ViewPage({Key? key}) : super(key: key);
 
@@ -30,7 +32,6 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  final AuthService _auth = AuthService();
 
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -47,8 +48,8 @@ class _TestPageState extends State<TestPage> {
   List<DoctorsList> buildList(DateTime date){
     List<DoctorsList> doctorsList = [];
     int i = 0;
-    for(int i=0; i<20; i++) {
-      doctorsList.add(DoctorsList());
+    for(int i=0; i<1; i++) {
+      doctorsList.add(DoctorsList(counter: i,));
     }
     return doctorsList;
   }
@@ -324,15 +325,21 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
 
 
 class DoctorsList extends StatefulWidget {
-  //const DoctorsList({required int counter});
+  final counter;
+  DoctorsList({this.counter});
 
   @override
-  _DoctorsListState createState() => _DoctorsListState();
+  _DoctorsListState createState() => _DoctorsListState(counter);
 }
 
 class _DoctorsListState extends State<DoctorsList> {
+  final counter;
+  _DoctorsListState(this.counter);
+
+  final DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
   bool _isVisible = false;
-  String uid = '0';
+  var name;
+  var email;
 
   void showToast() {
     setState(() {
@@ -341,91 +348,110 @@ class _DoctorsListState extends State<DoctorsList> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-          children: [
-            FlatButton(
-                onPressed: showToast,
-                child: demoDoctorsToDate('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png',"דר יסמין כרמי","מתמחה במחלקה הכירורגית", "13:45", context)
-            ),
-            Visibility(
-              child: Container(
+    print(counter);
+    return Column(
+      children: [
+        StreamBuilder<Object>(
+          stream: _data.getDocEmailFromCount(counter),
+          builder: (context, snapshot) {
+            if(snapshot.hasData) {
+              //print(snapshot.data);
+              email = snapshot.data;
+            }
+            return StreamBuilder<Object>(
+              stream: _data.getDoctorNameInner(email),
+              builder: (context, snapshot) {
+                print('hey3');
+                print(email);
+                if(snapshot.hasData){
+                  name = snapshot.data;
+                }
+                return FlatButton(
+                    onPressed: showToast,
+                    //child: demoDoctorsToDate('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png',name,"מתמחה במחלקה הכירורגית", "13:45", context)
+                    child: demoDoctorsToDate('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png',"דר יסמין כרמי","מתמחה במחלקה הכירורגית", "13:45", context)
+                );
+              }
+            );
+          }
+        ),
+        Visibility(
+          child: Container(
+            height: 150,
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            color: Colors.transparent,
+            child: Container(
                 height: 150,
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                color: Colors.transparent,
-                child: Container(
-                    height: 150,
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(11),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 2,
-                          offset: Offset(3, 2), // Shadow position
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(11),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 2,
+                      offset: Offset(3, 2), // Shadow position
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.all(6),
+                        color: Colors.yellow[50],
+                        height: 70,
+                        width: 350,
+                        child: const AutoSizeText("דר כרמי הגיעה לבדוק לשלומי ובבדיקת המדדים שביצעה נראה שהכל תקין",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.right,
+                          maxLines: 2,
+                        )
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            //navigate to the card making page
+                          },
+                          child: Text(
+                            "הכנת כרטיס תודה",
+                            style: TextStyle(
+                              color: Colors.red[700],
+                              fontSize: 17,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            //navigate to doctors page
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(uid: email,)));
+                          },
+                          child: const Text(
+                            "צפייה בפרופיל",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 17,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                            padding: EdgeInsets.all(6),
-                            color: Colors.yellow[50],
-                            height: 70,
-                            width: 350,
-                            child: const AutoSizeText("דר כרמי הגיעה לבדוק לשלומי ובבדיקת המדדים שביצעה נראה שהכל תקין",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.right,
-                              maxLines: 2,
-                            )
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FlatButton(
-                              onPressed: () {
-                                //navigate to the card making page
-                              },
-                              child: Text(
-                                "הכנת כרטיס תודה",
-                                style: TextStyle(
-                                  color: Colors.red[700],
-                                  fontSize: 17,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            FlatButton(
-                              onPressed: () {
-                                //navigate to doctors page
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(uid: uid,)));
-                              },
-                              child: const Text(
-                                "צפייה בפרופיל",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 17,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                ),
-              ), visible: _isVisible,),
-            Text("")
-          ],
-        )
+                  ],
+                )
+            ),
+          ), visible: _isVisible,),
+        Text("")
+      ],
     );
   }
 }
