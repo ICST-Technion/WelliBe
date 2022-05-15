@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
-    _data.updateDoctorData("סתם", "רעות", "עיניים של ילדים", "רופאת עיניים", "עברית, אנגלית", "שונאת חתולים", "r@gmail.com");
+    // _data.updateDoctorData("סתם", "רעות", "עיניים של ילדים", "רופאת עיניים", "עברית, אנגלית", "שונאת חתולים", "r@gmail.com");
     print(_auth.getCurrentUser()?.uid);
 
     return MaterialApp(
@@ -57,6 +57,7 @@ class _HomeState extends State<Home> {
                             label: const Text('logout'),
                             onPressed: () async {
                               await _auth.signOut();
+                              print("sign out");
                             },
                           ),
                         ),

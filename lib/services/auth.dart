@@ -37,18 +37,28 @@ class AuthService {
   }
 
   //sign in with email and password
+  Future signInWithEmailAndPassword(String email, String password) async{
+    try{
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User? user = result.user;
+      //create a new document for the user with the uid
+      //await DatabaseService(uid: user?.uid);
+      return _userFromFirebaseUser(user);
+    }catch(e){
+      print(e.toString());
+    }
+    
+  }
   //here we call the _populateCurrentUser(result.user)
 
   //register with email and password
   //here we need to call the database service function updateUserData inorder to create new user in firebase
-  Future registerWithEmailAndPassword(String email, String pass) async {
+  Future registerWithEmailAndPassword(String name, String email, String password) async {
     try{
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: pass);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
-
       //create a new document for the user with the uid
-      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', "anonymous");
-
+      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password);
       return _userFromFirebaseUser(user);
     }catch(e){
       print(e.toString());
@@ -58,7 +68,7 @@ class AuthService {
   //sign out
   Future signOut() async {
     try{
-      _auth.currentUser?.delete();
+      //_auth.currentUser?.delete();
       return await _auth.signOut();
     }catch(e){
       print(e.toString());

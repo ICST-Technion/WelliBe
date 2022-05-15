@@ -18,14 +18,16 @@ class DatabaseService {
 
 
   //adds user to users collection. needs to be called from sign up method.
-  Future updateUserData(String url, String name) async {
+  Future updateUserData(String url, String name, String email, String password) async {
     //updates firebases build in parameters
     _auth.getCurrentUser()?.updateProfile(displayName: name, photoURL: url); //changes the displayName but doesnt show up in firebase
 
     //updates the parameters i added to firebase...
     return await usersInfoCollection.doc(uid).set({
-    'url' : 'https://www.shareicon.net/data/128x128/2015/09/24/106425_man_512x512.png',
-    'name' : "firebase",
+      'url' : url,
+      'email' : email,
+      'password' : password,
+      'name' : name,
   });
   }
 
