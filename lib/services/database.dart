@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/screens/authenticate/authenticate.dart';
 import 'package:wellibe_proj/services/auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 
 
 class DatabaseService {
@@ -29,6 +33,11 @@ class DatabaseService {
       'doctors' : " ",
   });
   }
+
+  Future addDoctor() async {
+
+  }
+
 
   //add map of date and doctor id
   Future addMap(int day, int month, int year, String time, String duid) async{
@@ -91,6 +100,8 @@ class DatabaseService {
   ////////////////////////////// doctors functions //////////////////////////////////
 
   Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add, String email) async {
+    //updates firebases build in parameters
+    //updates the parameters i added to firebase...
     return await doctorsInfoCollection.doc(email).set({
       'url' : url,
       'name' : name,
@@ -99,6 +110,7 @@ class DatabaseService {
       'languages' : lan,
       'additional_info' : add,
       'email' : email,
+      'cards' : [],
     });
   }
 
@@ -174,10 +186,32 @@ class DatabaseService {
       name: snapshot.get('name'),
     );
   }
+
   //get user doc stream
   Stream<UserData> get userData {
     return usersInfoCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
+  Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
 
+    if (photo == null) return;
+    final fileName = (path);
+    final destination = 'files/';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child(path);
+      await ref.putData(photo);
+      var d = {'photo': path, 'username': username};
+      var l = [d];
+      // TODO: change doctor mail to be adaptive
+      doctorsInfoCollection.doc('r@gmail.com').update({"cards": FieldValue.arrayUnion(l)});
+
+    } catch (e) {
+      print('error occured');
+    }
+  }
 }

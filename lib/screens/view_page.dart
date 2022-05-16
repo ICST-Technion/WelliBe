@@ -8,6 +8,7 @@ import '../assets/wellibe_colors.dart';
 import '../services/auth.dart';
 //import 'package:flutter_visibility_widget_demo/splash_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:wellibe_proj/screens/card.dart';
 
 import 'histoy_qr.dart';
 
@@ -434,7 +435,7 @@ class _DoctorsListState extends State<DoctorsList> {
                       children: [
                         FlatButton(
                           onPressed: () {
-                            //navigate to the card making page
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender()));
                           },
                           child: Text(
                             "הכנת כרטיס תודה",

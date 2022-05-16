@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget{
           appId: "1:262208643994:android:732fbe638a0b7d5d7d5023",
           projectId: "industrial-01",
           messagingSenderId: '262208643994',
+          storageBucket: 'gs://industrial-01.appspot.com',
         ),
     ),
       builder: (context, snapshot) {
