@@ -45,11 +45,13 @@ class _TestPageState extends State<TestPage> {
   }
   
   List<DoctorsList> doctorsList = [];
-  List<DoctorsList> buildList(DateTime date){
+  List<DoctorsList> buildList(List docs){
+    if (docs == null)
+      return [];
     List<DoctorsList> doctorsList = [];
     int i = 0;
-    for(int i=0; i<1; i++) {
-      doctorsList.add(DoctorsList(counter: i,));
+    for(int i=0; i<docs.length; i++) {
+      doctorsList.add(DoctorsList(counter: i, arr: docs[i]));
     }
     return doctorsList;
   }
@@ -60,7 +62,6 @@ class _TestPageState extends State<TestPage> {
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
-
     return Material(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -166,9 +167,17 @@ class _TestPageState extends State<TestPage> {
           Expanded (
               child: Container(
                 color: Colors.white,
-                child: ListView(
-                    //children: buildList(DateTime.now()),
-                  children: buildList(_selectedDay),
+                child: StreamBuilder(
+                  stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
+                  builder: (context, snapshot) {
+                    print(snapshot.data);
+                    List l = snapshot.data as List;
+                    //print(l);
+                    return ListView(
+                        //children: buildList(DateTime.now()),
+                      children: buildList(l),
+                    );
+                  }
                 ),
                 //alignment: Alignment.topRight,
               )
@@ -326,20 +335,22 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
 
 class DoctorsList extends StatefulWidget {
   final counter;
-  DoctorsList({this.counter});
+  final arr;
+  DoctorsList({this.counter, this.arr});
 
   @override
-  _DoctorsListState createState() => _DoctorsListState(counter);
+  _DoctorsListState createState() => _DoctorsListState(arr);
 }
 
 class _DoctorsListState extends State<DoctorsList> {
-  final counter;
-  _DoctorsListState(this.counter);
+  var arr;
+  _DoctorsListState(this.arr);
 
   final DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
   bool _isVisible = false;
-  var name;
-  var email;
+  var name = "אנונימי";
+  var url = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
+  var pos = '';
 
   void showToast() {
     setState(() {
@@ -348,33 +359,39 @@ class _DoctorsListState extends State<DoctorsList> {
   }
   @override
   Widget build(BuildContext context) {
-    print(counter);
+    var email = arr[0];
+    var hour = arr[1];
     return Column(
       children: [
-        StreamBuilder<Object>(
-          stream: _data.getDocEmailFromCount(counter),
-          builder: (context, snapshot) {
-            if(snapshot.hasData) {
-              //print(snapshot.data);
-              email = snapshot.data;
-            }
-            return StreamBuilder<Object>(
+              StreamBuilder<Object>(
               stream: _data.getDoctorNameInner(email),
               builder: (context, snapshot) {
-                print('hey3');
-                print(email);
+                print(snapshot.data);
                 if(snapshot.hasData){
-                  name = snapshot.data;
+                  name = snapshot.data as String;
                 }
-                return FlatButton(
-                    onPressed: showToast,
-                    //child: demoDoctorsToDate('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png',name,"מתמחה במחלקה הכירורגית", "13:45", context)
-                    child: demoDoctorsToDate('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png',"דר יסמין כרמי","מתמחה במחלקה הכירורגית", "13:45", context)
+                return StreamBuilder<Object>(
+                  stream: _data.getDoctorUrlInner(email),
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                      url = snapshot.data as String;
+                    }
+                    return StreamBuilder<Object>(
+                      stream: _data.getDoctorPosInner(email),
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData){
+                          pos = snapshot.data as String;
+                        }
+                        return FlatButton(
+                            onPressed: showToast,
+                            child: demoDoctorsToDate(url, name, pos, hour, context)
+                        );
+                      }
+                    );
+                  }
                 );
               }
-            );
-          }
-        ),
+            ),
         Visibility(
           child: Container(
             height: 150,
