@@ -1,69 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:wellibe_proj/top_bar.dart';
 
-import 'assets/wellibe_colors.dart';
-
-
-const String scanQRString = 'סריקת רופא';
-const String cancelQRScanString = 'ביטול סריקה';
-
-class QRScanningPage extends StatefulWidget {
-
-  @override
-  State<QRScanningPage> createState() => _QRScanningPageState();
-}
-
-class _QRScanningPageState extends State<QRScanningPage> {
-  Future<void> scanQR() async {
-    var result = await BarcodeScanner.scan();
-
-    print(result.type); // The result type (barcode, cancelled, failed)
-    if(result.type == ResultType.Barcode) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorName: result.rawContent)),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: TopBar(),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: AppColors.mainWhite,
-              child: Center(
-                child: ElevatedButton(
-                  child: Text(
-                    scanQRString,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  onPressed: () => scanQR(),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
+import 'package:wellibe_proj/services/database.dart';
 
 const String yourDoctorIsString = 'המטפל/ת שלך הוא/היא';
-const String doctorString = 'ד"ר יסמין כרמי';
 
 class DoctorInfoPage extends StatelessWidget {
-  final String doctorName;
+  final String doctorEmail;
 
-  DoctorInfoPage({required this.doctorName});
+  DoctorInfoPage({required this.doctorEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -103,19 +49,53 @@ class DoctorInfoPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(30.0),
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: NetworkImage('https://www.woolha.com/media/2020/03/eevee.png'),
+                          child: StreamBuilder<String>(
+                            stream: DatabaseService.getDoctorUrlInner(doctorEmail),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData) {
+                                return CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: NetworkImage(snapshot.data!),
+                                );
+                              }
+                              else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            }
                           ),
                         ),
-                        Text(
-                          doctorName,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                        StreamBuilder<String>(
+                          stream: DatabaseService.getDoctorNameInner(doctorEmail),
+                          builder: (context, snapshot) {
+                            if(snapshot.hasData) {
+                              return Text(
+                              snapshot.data!,
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                            }
+                            else {
+                              return Text(
+                                " ",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                            }
+                          }
                         ),
-                        Text(
-                          'מתמחה במחלקה הכירוגית',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
-                        )
+                        StreamBuilder<String>(
+                          stream: DatabaseService.getDoctorPosition(doctorEmail),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(
+                                snapshot.data!,
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              );
+                            }
+                            else {
+                              return Text(
+                                " ",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              );
+                            }
+                          }
+                        ),
                       ],
                     ),
                   );

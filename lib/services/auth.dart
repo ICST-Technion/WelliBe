@@ -1,10 +1,8 @@
-
 //firebase authentication backend communication
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:wellibe_proj/services/database.dart';
 
-import '../models/user.dart';
+import 'package:wellibe_proj/services/database.dart';
+import 'package:wellibe_proj/models/user.dart';
 
 class AuthService {
 

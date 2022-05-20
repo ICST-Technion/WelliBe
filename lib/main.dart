@@ -1,14 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:intl/date_symbol_data_http_request.dart';
-import 'package:wellibe_proj/models/user.dart';
-import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:provider/provider.dart';
-import 'package:wellibe_proj/screens/view_page.dart';
-import 'package:wellibe_proj/screens/wrapper.dart';
-import 'package:wellibe_proj/services/auth.dart';
 //import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+import 'package:wellibe_proj/screens/wrapper.dart';
+import 'package:wellibe_proj/services/auth.dart';
+import 'package:wellibe_proj/models/user.dart';
+import 'package:wellibe_proj/screens/something_went_wrong.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

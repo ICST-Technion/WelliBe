@@ -1,15 +1,9 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:wellibe_proj/models/user.dart';
-import 'package:wellibe_proj/screens/authenticate/authenticate.dart';
-import 'package:wellibe_proj/services/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-
+import 'package:wellibe_proj/models/user.dart';
+import 'package:wellibe_proj/services/auth.dart';
 
 class DatabaseService {
   final String? uid;
@@ -123,8 +117,8 @@ class DatabaseService {
   // }
 
   //return doctors name based on his unique value
-  Stream<String> getDoctorNameInner(String email) {
-    return doctorsInfoCollection
+  static Stream<String> getDoctorNameInner(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
         .doc(email)
         .snapshots()
         .map((doc) {
@@ -137,8 +131,64 @@ class DatabaseService {
     });
   }
 
-  Stream<String> getDoctorUrlInner(String email) {
-    return doctorsInfoCollection
+  static Stream<String> getDoctorPosition(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
+        .doc(email)
+        .snapshots()
+        .map((doc) {
+      if (doc['position'] is String &&
+          (doc['position'] as String).isNotEmpty) {
+        return doc['position'];
+      } else {
+        return 'אין';
+      }
+    });
+  }
+
+  static Stream<String> getDoctorSpeciality(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
+        .doc(email)
+        .snapshots()
+        .map((doc) {
+      if (doc['speciality'] is String &&
+          (doc['speciality'] as String).isNotEmpty) {
+        return doc['speciality'];
+      } else {
+        return 'אין';
+      }
+    });
+  }
+
+  static Stream<String> getDoctorLanguages(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
+        .doc(email)
+        .snapshots()
+        .map((doc) {
+      if (doc['languages'] is String &&
+          (doc['languages'] as String).isNotEmpty) {
+        return doc['languages'];
+      } else {
+        return 'אין';
+      }
+    });
+  }
+
+  static Stream<String> getDoctorAdditional(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
+        .doc(email)
+        .snapshots()
+        .map((doc) {
+      if (doc['additional_info'] is String &&
+          (doc['additional_info'] as String).isNotEmpty) {
+        return doc['additional_info'];
+      } else {
+        return 'אין';
+      }
+    });
+  }
+
+  static Stream<String> getDoctorUrlInner(String email) {
+    return FirebaseFirestore.instance.collection('doctorsInfo')
         .doc(email)
         .snapshots()
         .map((doc) {

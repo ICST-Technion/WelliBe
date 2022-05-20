@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'assets/wellibe_colors.dart';
-
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
 
 String welcomeString = 'שלום,';
 String nameString = 'דן לביא';

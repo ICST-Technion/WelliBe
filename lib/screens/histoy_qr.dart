@@ -1,15 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
-import 'package:wellibe_proj/models/user.dart';
-import 'package:wellibe_proj/qr_scanning_page.dart';
+import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-import 'package:provider/provider.dart';
 
 class HistoryQr extends StatelessWidget {
   const HistoryQr({Key? key}) : super(key: key);
@@ -111,7 +107,6 @@ class _HomeState extends State<Home> {
                       textColor: Colors.black,
                       onPressed: () {
                         //navigate to shakeds qr page
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => QRScanningPage()));
 
                       },
                     ),

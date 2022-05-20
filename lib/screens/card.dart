@@ -1,17 +1,15 @@
-import 'dart:developer';
-import 'dart:math';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
-import 'package:wellibe_proj/screens/view_page.dart';
-import 'package:wellibe_proj/services/database.dart';
-import 'package:wellibe_proj/services/auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/material.dart';
+
+import 'package:wellibe_proj/screens/view_page.dart';
+import 'package:wellibe_proj/services/database.dart';
+import 'package:wellibe_proj/services/auth.dart';
 
 class CardSender extends StatefulWidget {
   @override
@@ -127,23 +125,25 @@ class _CardSenderState extends State<CardSender> {
           actions: [
             Padding(
               padding: EdgeInsets.all(8.0),
-              child: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              child: IconButton(
+                icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ],
-        leading:Padding(
-          padding: EdgeInsets.all(12.0),
-          child:ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.redAccent,
-              onPrimary: Colors.white,
-              shadowColor: Colors.greenAccent,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-            ),
-            onPressed: send,
-            child: Text('שלח', style:TextStyle(fontWeight: FontWeight.bold,)),
+        leading: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.redAccent,
+            onPrimary: Colors.white,
+            shadowColor: Colors.greenAccent,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
           ),
+          onPressed: send,
+          child: Text('שלח', style:TextStyle(fontWeight: FontWeight.bold,)),
         ),
       ),
       body: Center(

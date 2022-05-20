@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:wellibe_proj/screens/view_page.dart';
-
-import '../assets/wellibe_colors.dart';
-
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
+import 'package:wellibe_proj/services/database.dart';
+import 'package:wellibe_proj/screens/card.dart';
 
 class DoctorOverview extends StatefulWidget {
-  const DoctorOverview({required String uid});
+  final String email;
+  const DoctorOverview({required this.email});
 
   @override
   State<DoctorOverview> createState() => _DoctorOverviewState();
@@ -40,9 +42,19 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                       Center(
                         child: Stack(
                           children: [
-                            CircleAvatar(
-                            backgroundImage: NetworkImage('https://www.shareicon.net/data/128x128/2016/08/18/813847_people_512x512.png'),
-                            radius: 90,
+                            StreamBuilder<String>(
+                              stream: DatabaseService.getDoctorUrlInner(widget.email),
+                              builder: (context, snapshot) {
+                                if(snapshot.hasData) {
+                                  return CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot.data!),
+                                    radius: 90,
+                                  );
+                                }
+                                else {
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                              }
                             ),
                             Positioned(
                               bottom: 5,
@@ -73,13 +85,41 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                             ),
                             child: Column(
                               children: [
-                                Text(
-                                    "דר יסמין כרמי",
-                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                StreamBuilder<String>(
+                                  stream: DatabaseService.getDoctorNameInner(widget.email),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(
+                                        snapshot.data!,
+                                        style: TextStyle(fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                    }
+                                    else {
+                                      return Text(
+                                        " ",
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      );
+                                    }
+                                  }
                                 ),
-                                Text(
-                                  "מתמחה במחלקה הכירורגית",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                StreamBuilder<String>(
+                                    stream: DatabaseService.getDoctorPosition(widget.email),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                          snapshot.data!,
+                                          style: TextStyle(fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                      else {
+                                        return Text(
+                                          " ",
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                    }
                                 ),
                               ],
                             ),
@@ -105,40 +145,91 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                               "התחמחות:",
                             style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            "כירורגיה",
-                            style: TextStyle(fontSize: 18),
-                          ),
+                            StreamBuilder<String>(
+                                stream: DatabaseService.getDoctorSpeciality(widget.email),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data!,
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                  else {
+                                    return Text(
+                                      " ",
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                }
+                            ),
                             Spacer(),
                             Text(
                               "תפקידים:",
                               style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              "מתמחה בכירה במחלקה כירורגית א",
-                              style: TextStyle(fontSize: 18),
+                            StreamBuilder<String>(
+                                stream: DatabaseService.getDoctorPosition(widget.email),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data!,
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                  else {
+                                    return Text(
+                                      " ",
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                }
                             ),
                             Spacer(),
                             Text(
                               "שפות:",
                               style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              "עברית, אנגלית, ספרדית",
-                              style: TextStyle(fontSize: 18),
+                            StreamBuilder<String>(
+                                stream: DatabaseService.getDoctorLanguages(widget.email),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data!,
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                  else {
+                                    return Text(
+                                      " ",
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                }
                             ),
                             Spacer(),
-
                             Text(
                               "על עצמי:",
                               style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              "מתמחה שנה רביעית פה במחלקה הכירורגית. אמא לשתי בנות מקסימות בנות 4 ו6. אוהבת לטייל וחובבת צילום.",
-                              style: TextStyle(fontSize: 18),
+                            StreamBuilder<String>(
+                                stream: DatabaseService.getDoctorAdditional(widget.email),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data!,
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                  else {
+                                    return Text(
+                                      " ",
+                                      style: TextStyle(fontSize: 18),
+                                    );
+                                  }
+                                }
                             ),
                             Spacer(),
-                          ElevatedButton(
+                      ElevatedButton(
                               child: Text(
                                 "הכנת כרטיס הוקרת תודה",
                                 style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
@@ -146,9 +237,10 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(AppColors.buttonRed),
                                   padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
-                                  ), onPressed: () {  },
-                          ) // TODO: onPressed: onPressed
-                          ],
+                                  ), onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender()));
+                                  },
+                        )],
                       ),
                     ),
                   ),

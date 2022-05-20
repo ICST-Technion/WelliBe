@@ -2,16 +2,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
+
 import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/services/database.dart';
-import '../assets/wellibe_colors.dart';
-import '../qr_scanning_page.dart';
-import '../services/auth.dart';
-//import 'package:flutter_visibility_widget_demo/splash_screen.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
+import 'package:wellibe_proj/screens/qr_scanning_page.dart';
+import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/screens/card.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'histoy_qr.dart';
 
 final AuthService _auth = AuthService();
 
@@ -48,14 +47,27 @@ class _TestPageState extends State<TestPage> {
   
   List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(List docs){
-    if (docs == null)
+    if (docs == null) {
       return [];
+    }
+
     List<DoctorsList> doctorsList = [];
-    int i = 0;
-    for(int i=0; i<docs.length; i++) {
+    for(int i = 0; i < docs.length; i++) {
       doctorsList.add(DoctorsList(counter: i, arr: docs[i]));
     }
     return doctorsList;
+  }
+
+  Future<void> scanQR() async {
+    var result = await BarcodeScanner.scan();
+
+    print(result.type); // The result type (barcode, cancelled, failed)
+    if(result.type == ResultType.Barcode) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorEmail: result.rawContent)),
+      );
+    }
   }
   
   @override
@@ -64,8 +76,30 @@ class _TestPageState extends State<TestPage> {
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
-    return Material(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.mainYellow,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FlatButton(
+              child: const Text('התנתק', style: TextStyle(fontWeight: FontWeight.bold)),
+              onPressed: () async {
+                await _auth.signOut();
+                print("sign out");
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.qr_code_2, color: Colors.black,),
+              iconSize: 40,
+              onPressed: () async {
+                scanQR();
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget> [
@@ -79,52 +113,23 @@ class _TestPageState extends State<TestPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: FlatButton.icon(
-                        padding: const EdgeInsets.only(top: 30),
-                        label: const Text('התנתק'),
-                        icon: const Icon(Icons.person),
-                        onPressed: () async {
-                          await _auth.signOut();
-                          print("sign out");
-                        },
-                      ),
-                    ),
-                    Align(
+                    /*Align(
                       alignment: Alignment.topRight,
                       child: Padding(
                       padding: const EdgeInsets.fromLTRB(250, 30, 0, 0),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_forward), onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
-                      },
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_forward), onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                            },
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(right: 70),
-                      child: Column(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.qr_code_2),
-                            iconSize: 40,
-                            onPressed: () async {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => QRScanningPage()));
-                            },
-                          ),
-                          Text(
-                            'לסריקת עובדים',
-                          )
-                        ],
-                      )
-                    ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Column(
@@ -170,12 +175,15 @@ class _TestPageState extends State<TestPage> {
                             if(snapshot.hasData) {
                               img = snapshot.data;
                             }
-                            return CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.black,
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: CircleAvatar(
-                                radius: 45,
-                                backgroundImage: NetworkImage(img!),
+                                radius: 50,
+                                backgroundColor: Colors.black,
+                                child: CircleAvatar(
+                                  radius: 45,
+                                  backgroundImage: NetworkImage(img!),
+                                ),
                               ),
                             );
                           }
@@ -371,14 +379,14 @@ class _DoctorsListState extends State<DoctorsList> {
     return Column(
       children: [
               StreamBuilder<Object>(
-              stream: _data.getDoctorNameInner(email),
+              stream: DatabaseService.getDoctorNameInner(email),
               builder: (context, snapshot) {
                 print(snapshot.data);
                 if(snapshot.hasData){
                   name = snapshot.data as String;
                 }
                 return StreamBuilder<Object>(
-                  stream: _data.getDoctorUrlInner(email),
+                  stream: DatabaseService.getDoctorUrlInner(email),
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
                       url = snapshot.data as String;
@@ -456,7 +464,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         FlatButton(
                           onPressed: () {
                             //navigate to doctors page
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(uid: email,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
                           },
                           child: const Text(
                             "צפייה בפרופיל",
