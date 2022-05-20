@@ -5,11 +5,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/services/database.dart';
 import '../assets/wellibe_colors.dart';
+import '../qr_scanning_page.dart';
 import '../services/auth.dart';
 //import 'package:flutter_visibility_widget_demo/splash_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:wellibe_proj/screens/card.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 import 'histoy_qr.dart';
 
 final AuthService _auth = AuthService();
@@ -75,30 +76,68 @@ class _TestPageState extends State<TestPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                  Align(
-                  alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 16, 16, 0),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_forward), onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
-                      },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: FlatButton.icon(
+                        padding: const EdgeInsets.only(top: 30),
+                        label: const Text('התנתק'),
+                        icon: const Icon(Icons.person),
+                        onPressed: () async {
+                          await _auth.signOut();
+                          print("sign out");
+                        },
                       ),
                     ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                      padding: const EdgeInsets.fromLTRB(250, 30, 0, 0),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_forward), onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                      },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Align(
-                      alignment: Alignment.center,
+                    Container(
+                      padding: const EdgeInsets.only(right: 70),
                       child: Column(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.qr_code_2),
+                            iconSize: 40,
+                            onPressed: () async {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => QRScanningPage()));
+                            },
+                          ),
+                          Text(
+                            'לסריקת עובדים',
+                          )
+                        ],
+                      )
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const Padding(
                               padding: EdgeInsets.all(10),
                             ),
                             const Text(
-                              ',שלום',
+                              'שלום,',
                               style: TextStyle(fontSize: 20.0, color: AppColors.header),
+                              textAlign: TextAlign.justify,
+                              textDirection: TextDirection.rtl,
                             ),
                             StreamBuilder<String>(
                               stream: _data.getUserNameInner(),
@@ -109,6 +148,8 @@ class _TestPageState extends State<TestPage> {
                                 return Text(
                                   name!,
                                   style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: AppColors.header),
+                                  textAlign: TextAlign.justify,
+                                  textDirection: TextDirection.rtl,
                                 );
                               }
                             ),
@@ -118,6 +159,7 @@ class _TestPageState extends State<TestPage> {
                           ]
                       ),
                     ),
+                    Padding(padding: EdgeInsets.all(5)),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
@@ -144,22 +186,32 @@ class _TestPageState extends State<TestPage> {
                 ),
                 TableCalendar(
                   locale: "hebrew",
+                  //headerVisible: false,
                   firstDay: DateTime.utc(2010, 10, 16),
                   lastDay: DateTime.utc(2030, 3, 14),
                   focusedDay: _focusedDay,
+                  headerVisible: true,
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
                       _selectedDay = selectedDay;
-                      _focusedDay = focusedDay; // update `_focusedDay` here as well
+                      _focusedDay = focusedDay;
                     });
                   },
                   calendarFormat: CalendarFormat.week,
                   onPageChanged: (focusedDay) {
                     _focusedDay = focusedDay;
                   },
+                  availableCalendarFormats: {
+                    CalendarFormat.month: 'חודש',
+                    CalendarFormat.week: 'שבוע',
+                  },
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
                 )
               ],
             ),
@@ -286,52 +338,6 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
         ),
     );
 }
-
-
-class TableBasicsExample extends StatefulWidget {
-  const TableBasicsExample({Key? key}) : super(key: key);
-
-@override
-_TableBasicsExampleState createState() => _TableBasicsExampleState();
-}
-
-class _TableBasicsExampleState extends State<TableBasicsExample> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  @override
-  Widget build(BuildContext context) {
-    return TableCalendar(
-        firstDay: DateTime.utc(2010, 10, 16),
-        lastDay: DateTime.utc(2030, 3, 14),
-        focusedDay: _focusedDay,
-        calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) {
-          return isSameDay(_selectedDay, day);
-        },
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          }
-        },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
-          _focusedDay = focusedDay;
-        },
-    );
-  }
-}
-
 
 
 class DoctorsList extends StatefulWidget {

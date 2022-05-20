@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/models/user.dart';
+import 'package:wellibe_proj/qr_scanning_page.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
@@ -110,6 +111,8 @@ class _HomeState extends State<Home> {
                       textColor: Colors.black,
                       onPressed: () {
                         //navigate to shakeds qr page
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => QRScanningPage()));
+
                       },
                     ),
                     decoration: BoxDecoration(
