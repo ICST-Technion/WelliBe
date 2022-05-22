@@ -28,7 +28,7 @@ class DatabaseService {
   });
   }
 
-  Future addDoctor() async {
+  Future addDoctor(String email) async {
 
   }
 
@@ -36,12 +36,11 @@ class DatabaseService {
   //add map of date and doctor id
   Future addMap(int day, int month, int year, String time, String duid) async{
     String date = day.toString() + "-" + month.toString() + "-" + year.toString();
-    return await usersInfoCollection.doc(uid).update({"doctors.$date.$duid" : time });
+    return await usersInfoCollection.doc(uid).update({"doctors.$date.$time" : duid });
   }
 
   Stream<List> fromDateToList(int day, int month, int year){
     var date = day.toString() + "-" + month.toString() + "-" + year.toString();
-    print(date);
      return usersInfoCollection.doc(uid).snapshots().map((doc) {
        var maps = doc['doctors'] as Map;
        List l = [];
@@ -58,6 +57,7 @@ class DatabaseService {
          i++;
          j = 0;
        }
+       print(l);
        return l;
     });
   }
@@ -92,6 +92,7 @@ class DatabaseService {
 
 
   ////////////////////////////// doctors functions //////////////////////////////////
+  /// the uid entered doesnt matter in the doctors functions... as it only matters in the Users functions
 
   Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add, String email) async {
     //updates firebases build in parameters
@@ -107,14 +108,6 @@ class DatabaseService {
       'cards' : [],
     });
   }
-
-  // Stream<String> getDocEmailFromCount(int counter){
-  //   var duid;
-  //   return usersInfoCollection.doc(uid).snapshots().map((doc) {
-  //     duid = doc['doctors'][counter]["email"];
-  //     return duid;
-  // });
-  // }
 
   //return doctors name based on his unique value
   static Stream<String> getDoctorNameInner(String email) {
@@ -209,6 +202,20 @@ class DatabaseService {
       if (doc['position'] is String &&
           (doc['position'] as String).isNotEmpty) {
         return doc['position'];
+      } else {
+        return '';
+      }
+    });
+  }
+
+  Stream<String> getDoctorSpecialtyInner(String email) {
+    return doctorsInfoCollection
+        .doc(email)
+        .snapshots()
+        .map((doc) {
+      if (doc['speciality'] is String &&
+          (doc['speciality'] as String).isNotEmpty) {
+        return doc['speciality'];
       } else {
         return '';
       }

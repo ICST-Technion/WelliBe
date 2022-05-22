@@ -207,6 +207,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                 }
                             ),
                             Spacer(),
+
                             Text(
                               "על עצמי:",
                               style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),

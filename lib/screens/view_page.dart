@@ -45,24 +45,27 @@ class _TestPageState extends State<TestPage> {
     });
   }
   
-  List<DoctorsList> doctorsList = [];
+  //List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(List docs){
-    if (docs == null) {
-      return [];
-    }
-
     List<DoctorsList> doctorsList = [];
+    if (docs == null) {
+      doctorsList.add(DoctorsList(key: Key("100"), counter: -100, arr: docs));
+      return doctorsList;
+    }
     for(int i = 0; i < docs.length; i++) {
-      doctorsList.add(DoctorsList(counter: i, arr: docs[i]));
+      doctorsList.add(DoctorsList(key: Key(DateTime.now().toLocal().toString()), counter: i, arr: docs[i]));
     }
     return doctorsList;
   }
 
   Future<void> scanQR() async {
     var result = await BarcodeScanner.scan();
-
+    DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     print(result.type); // The result type (barcode, cancelled, failed)
     if(result.type == ResultType.Barcode) {
+      DateTime time = DateTime.now().toLocal();
+      String hour = time.hour.toString() + ":" + time.minute.toString();
+      _data.addMap(time.day, time.month, time.year, hour, result.rawContent);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorEmail: result.rawContent)),
@@ -83,7 +86,7 @@ class _TestPageState extends State<TestPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FlatButton(
-              child: const Text('התנתק', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();
                 print("sign out");
@@ -110,22 +113,6 @@ class _TestPageState extends State<TestPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /*Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                      padding: const EdgeInsets.fromLTRB(250, 30, 0, 0),
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_forward), onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
-                            },
-                        ),
-                      ),
-                    ),*/
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -231,13 +218,22 @@ class _TestPageState extends State<TestPage> {
                 child: StreamBuilder(
                   stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
                   builder: (context, snapshot) {
-                    print(snapshot.data);
-                    List l = snapshot.data as List;
-                    //print(l);
-                    return ListView(
+                    if(snapshot.hasData){
+                      //print(snapshot.data);
+                      List l = snapshot.data as List;
+                      //print(l);
+                      return ListView(
                         //children: buildList(DateTime.now()),
-                      children: buildList(l),
-                    );
+                        children: buildList(l),
+                      );
+                    }
+                    else{
+                      return Center(
+                        child: Text(
+                          'לא היו פגישות בתאריך זה'
+                          , style: TextStyle(fontSize: 20),),
+                      );
+                    }
                   }
                 ),
                 //alignment: Alignment.topRight,
@@ -351,15 +347,16 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
 class DoctorsList extends StatefulWidget {
   final counter;
   final arr;
-  DoctorsList({this.counter, this.arr});
+  DoctorsList({required Key key, required this.counter, required this.arr}) : super(key: key);
 
   @override
-  _DoctorsListState createState() => _DoctorsListState(arr);
+  _DoctorsListState createState() => _DoctorsListState(arr, counter);
 }
 
 class _DoctorsListState extends State<DoctorsList> {
   var arr;
-  _DoctorsListState(this.arr);
+  var counter;
+  _DoctorsListState(this.arr, this.counter);
 
   final DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
   bool _isVisible = false;
@@ -381,7 +378,6 @@ class _DoctorsListState extends State<DoctorsList> {
               StreamBuilder<Object>(
               stream: DatabaseService.getDoctorNameInner(email),
               builder: (context, snapshot) {
-                print(snapshot.data);
                 if(snapshot.hasData){
                   name = snapshot.data as String;
                 }
