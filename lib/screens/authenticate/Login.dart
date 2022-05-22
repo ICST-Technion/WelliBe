@@ -85,8 +85,8 @@ class LoginScreen extends StatelessWidget {
                         }
                         if(val.isEmpty)
                           return 'הכנס סיסמה';
-                        if(val.length < 8)
-                          return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
+                        if(val.length < 6)
+                          return 'הסיסמה חייבת להיות באורך 6 תווים לפחות';
                         for(int i=0; i< val.length; i++){
                           if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
                             return 'הוכנס תו לא חוקי בסיסמה';
