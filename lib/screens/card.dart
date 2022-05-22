@@ -12,6 +12,8 @@ import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/services/auth.dart';
 
 class CardSender extends StatefulWidget {
+  final String email;
+  const CardSender({required this.email});
   @override
   State<CardSender> createState() => _CardSenderState();
 }
@@ -24,7 +26,7 @@ class _CardSenderState extends State<CardSender> {
   int selected_edit = 0;
   String content = "";
   var edibales = ["אדום", "שחור", "כחול", "ירוק"];
-  var sizes = [173.0, 165.0, 171.0, 180.0];
+  var sizes = [123.0, 115.0, 121.0, 145.0]; //+- 50
   var selected = [true, false, false, false];
   var font = "Times New Roman";
   var weight = FontWeight.w400;
@@ -92,6 +94,7 @@ class _CardSenderState extends State<CardSender> {
   }
 
     void send() async{
+    doctor_id = widget.email;
     final _auth = AuthService();
     //TODO: send card data to server here
     var png = await _capturePng();
@@ -384,30 +387,7 @@ class _CardSenderState extends State<CardSender> {
 
               ],
             ),
-            BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
-              selectedItemColor: Colors.orange,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.email),
-                  label: 'אפקטים',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.heart_broken_outlined),
-                  label: 'סטיקרים',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.photo_album_outlined),
-                  label: 'תמונה',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.keyboard),
-                  label: 'עריכה',
-                ),
 
-                ],
-              ),
         ],
         ),
       ),

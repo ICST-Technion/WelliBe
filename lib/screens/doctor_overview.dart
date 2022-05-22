@@ -239,7 +239,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                   backgroundColor: MaterialStateProperty.all(AppColors.buttonRed),
                                   padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
                                   ), onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));
                                   },
                         )],
                       ),

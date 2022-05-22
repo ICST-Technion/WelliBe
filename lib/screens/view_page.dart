@@ -445,7 +445,7 @@ class _DoctorsListState extends State<DoctorsList> {
                       children: [
                         FlatButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
                           },
                           child: Text(
                             "הכנת כרטיס תודה",
