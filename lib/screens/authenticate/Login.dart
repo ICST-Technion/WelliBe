@@ -50,6 +50,7 @@ class LoginScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 40),
                     child: TextFormField(
+                      textDirection: TextDirection.ltr,
                       decoration: const InputDecoration(
                           labelText: "כתובת מייל"
                       ),
@@ -84,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                         }
                         if(val.isEmpty)
                           return 'הכנס סיסמה';
-                        if(val.length <= 8)
+                        if(val.length < 8)
                           return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
                         for(int i=0; i< val.length; i++){
                           if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
@@ -102,13 +103,20 @@ class LoginScreen extends StatelessWidget {
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: Text(
-                      "שכחת סיסמה?",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0XFF2661FA)
+                    child: GestureDetector(
+                      onTap: (){
+                        toggleView(3);
+                      },
+                      child: Text(
+                        "שכחת סיסמה?",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2661FA)
+                        ),
                       ),
                     ),
+
                   ),
 
                   SizedBox(height: size.height * 0.05),
@@ -117,13 +125,13 @@ class LoginScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                     child: ElevatedButton(
-                      onPressed: () async { //
-                        //if (_formKey.currentState!.validate()){
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()){
                           dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                           if(result==null){
                             print('could not sign in with credentials');
                           }
-                        //}
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
@@ -159,7 +167,7 @@ class LoginScreen extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                     child: GestureDetector(
                       onTap: (){
-                        toggleView();
+                        toggleView(2);
                       },
                       child: Text(
                         "אין חשבון? הירשם",

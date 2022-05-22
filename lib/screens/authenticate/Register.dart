@@ -64,17 +64,15 @@ class RegisterScreen extends StatelessWidget {
                                 labelText: "שם פרטי"
                             ),
                             validator: (val) {
-                              if(val==null){
+                              if(val==null || val.trim().isEmpty){
                                 return 'הכנס שם פרטי';
                               }
-                              for(int i = 0; i< val.length;i++){
-                                if(val.codeUnitAt(i) >= '0'.codeUnitAt(i) && val.codeUnitAt(i) <= '9'.codeUnitAt(i))
-                                  return 'שם פרטי לא יכול להכיל מספר';
-                              }
+                              if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
+                                return 'שם לא חוקי';
                               return null;
                               },
                             onChanged: (val) {
-                              firstName = val;
+                              firstName = val.trim();
                             },
                           ),
                         ),
@@ -87,17 +85,16 @@ class RegisterScreen extends StatelessWidget {
                                 labelText: "שם משפחה"
                             ),
                             validator: (val) {
-                              if(val == null){
+                              if(val == null || val.trim().length == 0){
                                 return  'הכנס שם משפחה';
                               }
-                              for(int i = 0; i< val.length;i++){
-                                if(val.codeUnitAt(i) >= '0'.codeUnitAt(i) && val.codeUnitAt(i) <= '9'.codeUnitAt(i))
-                                  return 'שם משפחה לא יכול להכיל מספר';
-                              }
+                              if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
+                                return 'שם לא חוקי';
+
                               return null;
                             },
                             onChanged: (val) {
-                              familyName = val;
+                              familyName = val.trim();
                             },
                           ),
                         ),
@@ -106,15 +103,16 @@ class RegisterScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           margin: EdgeInsets.symmetric(horizontal: 40),
                           child: TextFormField(
+                            textDirection: TextDirection.ltr,
                             decoration: const InputDecoration(
                                 labelText: "כתובת מייל"
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
+                            validator: (val) {
+                              if (val == null || val.trim().isEmpty) {
                                 return "הכנס כתובת מייל";
                               }
                               String pattern = r'\w+@\w+\.\w+';
-                              if (!RegExp(pattern).hasMatch(value)) {
+                              if (!RegExp(pattern).hasMatch(val.trim())) {
                                 return 'כתובת מייל לא חוקית';
                               }
                               return null;
@@ -136,18 +134,18 @@ class RegisterScreen extends StatelessWidget {
                               if(val==null){
                                 return null;
                               }
-                              if(val.isEmpty)
+                              if(val.trim().isEmpty)
                                 return 'הכנס סיסמה';
-                              if(val.length <= 8)
+                              if(val.trim().length < 8)
                                 return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
-                              for(int i=0; i< val.length; i++){
-                                if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
+                              for(int i=0; i< val.trim().length; i++){
+                                if(val.trim()[i] == '\'' || val.trim()[i] == '\;' || val.trim()[i] == ' ')
                                   return 'הוכנס תו לא חוקי בסיסמה';
                               }
                               return null;
                             },
                             onChanged: (val) {
-                              password = val;
+                              password = val.trim();
                             },
                             obscureText: true,
                           ),
@@ -162,12 +160,10 @@ class RegisterScreen extends StatelessWidget {
                                 labelText: "אימות סיסמה"
                             ),
                             validator: (val){
-                              if(password != passwordAuth)
-                                return "סיסמה לא תואמת";
+                             return (password != passwordAuth)? "סיסמה לא תואמת" : null;
                             },
-                            onChanged: (val) {
-                              passwordAuth = val;
-                            },
+                            onChanged: (val) => passwordAuth = val.trim()
+                            ,
                           ),
                         ),
 
@@ -179,10 +175,10 @@ class RegisterScreen extends StatelessWidget {
                               horizontal: 40, vertical: 10),
                           child: ElevatedButton(
                             onPressed: () async {
-                              //if (_formKey.currentState!.validate()){
-                              dynamic result = await _auth.registerWithEmailAndPassword(firstName+" "+familyName, email, password);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQr()));
-                              //}
+                              if (_formKey.currentState!.validate()){
+                                  dynamic result = await _auth.registerWithEmailAndPassword(firstName+" "+familyName, email, password);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQr()));
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -221,7 +217,7 @@ class RegisterScreen extends StatelessWidget {
                           child: GestureDetector(
                             onTap: ()
                             {
-                              toggleView();
+                              toggleView(1);
                             },
                             child: Text(
                               "כבר קיים חשבון? התחבר כאן",

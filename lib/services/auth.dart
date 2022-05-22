@@ -89,6 +89,16 @@ class AuthService {
     }
   }
 
+  Future<void> sendResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      print('הסיסמה אותחלה ונשלחה');
+    }
+    catch (e) {
+      print('כתובת מייל לא קיימת');
+    }
+  }
+
   // Future _populateCurrentUser(User user) async{
   //   DatabaseService _data = DatabaseService(uid: _auth.currentUser?.uid);
   //   if(user!=null){
