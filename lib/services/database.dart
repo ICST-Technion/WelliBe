@@ -243,6 +243,7 @@ class DatabaseService {
   }
 
   Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
+    // doctor_id is doctor's email
     firebase_storage.FirebaseStorage storage =
         firebase_storage.FirebaseStorage.instance;
 
@@ -258,7 +259,7 @@ class DatabaseService {
       var d = {'photo': path, 'username': username};
       var l = [d];
       // TODO: change doctor mail to be adaptive
-      doctorsInfoCollection.doc('r@gmail.com').update({"cards": FieldValue.arrayUnion(l)});
+      doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
 
     } catch (e) {
       print('error occured');
