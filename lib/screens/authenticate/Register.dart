@@ -37,7 +37,7 @@ class RegisterScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
           body:
           Container(
-              color: AppColors.mainYellow,
+              color: Colors.white,
               child: Form(
                   key: _formKey,
                   child: Column(
@@ -50,7 +50,7 @@ class RegisterScreen extends StatelessWidget {
                             "הרשמה",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF2661FA),
+                                color: Colors.black,
                                 fontSize: 36
                             ),
                             textAlign: TextAlign.left,
@@ -191,19 +191,15 @@ class RegisterScreen extends StatelessWidget {
                               width: size.width * 0.5,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(80.0),
-                                  gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(255, 255, 136, 34),
-                                        Color.fromARGB(255, 255, 177, 41)
-                                      ]
-                                  )
+                                  color: Colors.teal[300],
                               ),
                               padding: const EdgeInsets.all(0),
                               child: Text(
                                 "הרשמה",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.mainWhite,
                                 ),
                               ),
                             ),
@@ -224,7 +220,7 @@ class RegisterScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF2661FA),
+                                  color: Colors.indigo.shade900,
                               ),
                             ),
                           ),

@@ -20,12 +20,13 @@ class _DoctorOverviewState extends State<DoctorOverview> {
       textDirection: TextDirection.rtl,
       child: Material(
         child: Container(
+          color: Colors.teal[300],
           child: Column(
             children: [
               Expanded(
                 flex: 2,
                 child: Container(
-                  color: AppColors.mainYellow,
+                  color: Colors.teal[300],
                   child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -47,8 +48,12 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                               builder: (context, snapshot) {
                                 if(snapshot.hasData) {
                                   return CircleAvatar(
-                                    backgroundImage: NetworkImage(snapshot.data!),
                                     radius: 90,
+                                    backgroundColor: Colors.black,
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(snapshot.data!),
+                                      radius: 84,
+                                    ),
                                   );
                                 }
                                 else {
@@ -81,7 +86,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                 ),
                               ],
                               color: AppColors.mainWhite,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                              borderRadius: BorderRadius.all(Radius.circular(11)),
                             ),
                             child: Column(
                               children: [
@@ -133,7 +138,11 @@ class _DoctorOverviewState extends State<DoctorOverview> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  color: AppColors.mainWhite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(9), topLeft: Radius.circular(9)),
+                    color: AppColors.mainWhite,
+                  ),
+                  //color: AppColors.mainWhite,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Align(
@@ -236,7 +245,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                 style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(AppColors.buttonRed),
+                                  backgroundColor: MaterialStateProperty.all(Colors.indigo.shade900),
                                   padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
                                   ), onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));

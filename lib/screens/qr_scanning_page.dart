@@ -15,7 +15,7 @@ class DoctorInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        color: AppColors.mainYellow,
+        color: Colors.teal[300],
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +108,7 @@ class DoctorInfoPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
                     padding: EdgeInsets.all(20),
-                    primary: AppColors.buttonRed,
+                    primary: Colors.indigo.shade900,
                   ),
                   onPressed: () {
                     Navigator.pop(context);

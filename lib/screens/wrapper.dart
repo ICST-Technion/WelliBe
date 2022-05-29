@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wellibe_proj/screens/authenticate/authenticate.dart';
+import 'package:wellibe_proj/screens/histoy_qr.dart';
+import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/models/user.dart';
 

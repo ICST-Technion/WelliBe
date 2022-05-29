@@ -23,163 +23,161 @@ class LoginScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         body:
-          Container(
-            color: AppColors.mainYellow,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      "התחברות",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2661FA),
-                          fontSize: 36
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-
-                  SizedBox(height: size.height * 0.03),
-
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 40),
-                    child: TextFormField(
-                      textDirection: TextDirection.ltr,
-                      decoration: const InputDecoration(
-                          labelText: "כתובת מייל"
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "הכנס כתובת מייל";
-                        }
-                        String pattern = r'\w+@\w+\.\w+';
-                        if (!RegExp(pattern).hasMatch(value)) {
-                          return 'כתובת מייל לא חוקית';
-                        }
-                        return null;
-                      },
-                      onChanged: (val) {
-                        email = val;
-                      },
-                    ),
-                  ),
-
-                  SizedBox(height: size.height * 0.03),
-
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 40),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "סיסמה"
-                      ),
-                      validator: (val){
-                        if(val==null){
-                          return null;
-                        }
-                        if(val.isEmpty)
-                          return 'הכנס סיסמה';
-                        if(val.length < 8)
-                          return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
-                        for(int i=0; i< val.length; i++){
-                          if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
-                            return 'הוכנס תו לא חוקי בסיסמה';
-                        }
-                        return null;
-                      },
-                      onChanged: (val) {
-                        password = val;
-                      },
-                      obscureText: true,
-                    ),
-                  ),
-
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: GestureDetector(
-                      onTap: (){
-                        toggleView(3);
-                      },
+          Center(
+            child: Container(
+              color: Colors.white,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
-                        "שכחת סיסמה?",
+                        "התחברות",
                         style: TextStyle(
-                            fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF2661FA)
+                            color: Colors.black,
+                            fontSize: 36
                         ),
+                        textAlign: TextAlign.left,
                       ),
                     ),
 
-                  ),
+                    SizedBox(height: size.height * 0.03),
 
-                  SizedBox(height: size.height * 0.05),
-
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()){
-                          dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                          if(result==null){
-                            print('could not sign in with credentials');
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-                        primary: Colors.white,
-                        padding: const EdgeInsets.all(0)),
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 50.0,
-                        width: size.width * 0.5,
-                        decoration: new BoxDecoration(
-                            borderRadius: BorderRadius.circular(80.0),
-                            gradient: new LinearGradient(
-                                colors: [
-                                  Color.fromARGB(255, 255, 136, 34),
-                                  Color.fromARGB(255, 255, 177, 41)
-                                ]
-                            )
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 40),
+                      child: TextFormField(
+                        textDirection: TextDirection.ltr,
+                        decoration: const InputDecoration(
+                            labelText: "כתובת מייל"
                         ),
-                        padding: const EdgeInsets.all(0),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "הכנס כתובת מייל";
+                          }
+                          String pattern = r'\w+@\w+\.\w+';
+                          if (!RegExp(pattern).hasMatch(value)) {
+                            return 'כתובת מייל לא חוקית';
+                          }
+                          return null;
+                        },
+                        onChanged: (val) {
+                          email = val;
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: size.height * 0.03),
+
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 40),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "סיסמה"
+                        ),
+                        validator: (val){
+                          if(val==null){
+                            return null;
+                          }
+                          if(val.isEmpty)
+                            return 'הכנס סיסמה';
+                          if(val.length < 8)
+                            return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
+                          for(int i=0; i< val.length; i++){
+                            if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
+                              return 'הוכנס תו לא חוקי בסיסמה';
+                          }
+                          return null;
+                        },
+                        onChanged: (val) {
+                          password = val;
+                        },
+                        obscureText: true,
+                      ),
+                    ),
+
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                      child: GestureDetector(
+                        onTap: (){
+                          toggleView(3);
+                        },
                         child: Text(
-                          "התחבר",
-                          textAlign: TextAlign.center,
+                          "שכחת סיסמה?",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.indigo.shade900,
+                          ),
+                        ),
+                      ),
+
+                    ),
+
+                    SizedBox(height: size.height * 0.05),
+
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()){
+                            dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+                            if(result==null){
+                              print('could not sign in with credentials');
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+                          primary: Colors.white,
+                          padding: const EdgeInsets.all(0)),
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50.0,
+                          width: size.width * 0.5,
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(80.0),
+                              color: Colors.teal[300],
+                          ),
+                          padding: const EdgeInsets.all(0),
+                          child: Text(
+                            "התחבר",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.mainWhite
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                  Container(
-                    alignment: Alignment.centerRight,
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    child: GestureDetector(
-                      onTap: (){
-                        toggleView(2);
-                      },
-                      child: Text(
-                        "אין חשבון? הירשם",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2661FA)
+                    Container(
+                      alignment: Alignment.centerRight,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                      child: GestureDetector(
+                        onTap: (){
+                          toggleView(2);
+                        },
+                        child: Text(
+                          "אין חשבון? הירשם",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.indigo.shade900
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),

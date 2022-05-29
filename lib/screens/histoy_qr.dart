@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
                             padding: const EdgeInsets.only(top: 40, left: 260),
                             icon: Image.network('https://www.shareicon.net/data/128x128/2015/09/24/106425_man_512x512.png'),//_auth.returnUrl()),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => PatientsPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
                                },
                           ),
                         ),

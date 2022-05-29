@@ -28,6 +28,22 @@ class DatabaseService {
   });
   }
 
+  Future updateUserName(String name) async{
+    return await usersInfoCollection.doc(uid).update({'name' : name});
+  }
+
+  Future updateUserAge(String age) async{
+    return await usersInfoCollection.doc(uid).update({'age' : age});
+  }
+
+  Future updateUserGender(String gender) async{
+    return await usersInfoCollection.doc(uid).update({'gender' : gender});
+  }
+
+  Future updateUserUrl(String url) async{
+    return await usersInfoCollection.doc(uid).update({url : url});
+  }
+
   Future addDoctor(String email) async {
 
   }
@@ -72,6 +88,34 @@ class DatabaseService {
         return doc['name'];
       } else {
         return 'אנונימי';
+      }
+    });
+  }
+
+  Stream<String> getUserAgeInner() {
+    return usersInfoCollection
+        .doc(uid)
+        .snapshots()
+        .map((doc) {
+      if (doc['age'] is String &&
+          (doc['age'] as String).isNotEmpty) {
+        return doc['age'];
+      } else {
+        return '';
+      }
+    });
+  }
+
+  Stream<String> getUserGenderInner() {
+    return usersInfoCollection
+        .doc(uid)
+        .snapshots()
+        .map((doc) {
+      if (doc['gender'] is String &&
+          (doc['gender'] as String).isNotEmpty) {
+        return doc['gender'];
+      } else {
+        return '';
       }
     });
   }

@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 
 import 'package:wellibe_proj/screens/doctor_overview.dart';
+import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
@@ -65,6 +66,7 @@ class _TestPageState extends State<TestPage> {
     if(result.type == ResultType.Barcode) {
       DateTime time = DateTime.now().toLocal();
       String hour = time.hour.toString() + ":" + time.minute.toString();
+      print(time);
       _data.addMap(time.day, time.month, time.year, hour, result.rawContent);
       Navigator.push(
         context,
@@ -81,7 +83,8 @@ class _TestPageState extends State<TestPage> {
     String? name = "אנונימי";
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.mainYellow,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -102,144 +105,164 @@ class _TestPageState extends State<TestPage> {
           ],
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget> [
-          Container(
-            //padding: const EdgeInsets.all(30.0),
-            color: Colors.yellow[50],
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(10),
-                            ),
-                            const Text(
-                              'שלום,',
-                              style: TextStyle(fontSize: 20.0, color: AppColors.header),
-                              textAlign: TextAlign.justify,
-                              textDirection: TextDirection.rtl,
-                            ),
-                            StreamBuilder<String>(
-                              stream: _data.getUserNameInner(),
-                              builder: (context, snapshot) {
-                                if(snapshot.hasData) {
-                                  name = snapshot.data;
-                                }
-                                return Text(
-                                  name!,
-                                  style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: AppColors.header),
-                                  textAlign: TextAlign.justify,
-                                  textDirection: TextDirection.rtl,
-                                );
-                              }
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.all(10),
-                            ),
-                          ]
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(5)),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: StreamBuilder<String>(
-                          stream: _data.getUrlInner(),
-                          builder: (context, snapshot) {
-                            if(snapshot.hasData) {
-                              img = snapshot.data;
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircleAvatar(
-                                radius: 50,
-                                backgroundColor: Colors.black,
-                                child: CircleAvatar(
-                                  radius: 45,
-                                  backgroundImage: NetworkImage(img!),
-                                ),
+      body: Container(
+        color: Colors.teal[300],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget> [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(9), bottomRight: Radius.circular(9)),
+                color: Colors.white
+              ),
+              //padding: const EdgeInsets.all(30.0),
+              //color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    //crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(10),
                               ),
-                            );
-                          }
+                              Text(
+                                'שלום,',
+                                style: TextStyle(fontSize: 20.0, color: Colors.black), //Colors.indigo.shade900),
+                                textAlign: TextAlign.justify,
+                                textDirection: TextDirection.rtl,
+                              ),
+                              StreamBuilder<String>(
+                                stream: _data.getUserNameInner(),
+                                builder: (context, snapshot) {
+                                  if(snapshot.hasData) {
+                                    name = snapshot.data;
+                                  }
+                                  return Text(
+                                    name!,
+                                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black), //Colors.indigo.shade900),
+                                    textAlign: TextAlign.justify,
+                                    textDirection: TextDirection.rtl,
+                                  );
+                                }
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(10),
+                              ),
+                            ]
                         ),
+                      ),
+                      Padding(padding: EdgeInsets.all(5)),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: StreamBuilder<String>(
+                            stream: _data.getUrlInner(),
+                            builder: (context, snapshot) {
+                              if(snapshot.hasData) {
+                                img = snapshot.data;
+                              }
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.black,
+                                    child: CircleAvatar(
+                                      radius: 45,
+                                      backgroundImage: NetworkImage(img!),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                          ),
+                        )
+                      ),
+                    ]
+                  ),
+                  TableCalendar(
+                    locale: "hebrew",
+                    firstDay: DateTime.utc(2010, 10, 16),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: _focusedDay,
+                    headerVisible: true,
+                    calendarStyle: CalendarStyle(
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.teal[300],
+                      ),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.teal[100],
                       )
                     ),
-                  ]
-                ),
-                TableCalendar(
-                  locale: "hebrew",
-                  //headerVisible: false,
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: _focusedDay,
-                  headerVisible: true,
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    calendarFormat: CalendarFormat.week,
+                    onPageChanged: (focusedDay) {
                       _focusedDay = focusedDay;
-                    });
-                  },
-                  calendarFormat: CalendarFormat.week,
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
-                  availableCalendarFormats: {
-                    CalendarFormat.month: 'חודש',
-                    CalendarFormat.week: 'שבוע',
-                  },
-                  headerStyle: HeaderStyle(
-                    formatButtonVisible: false,
-                    titleCentered: true,
-                  ),
-                )
-              ],
+                    },
+                    availableCalendarFormats: {
+                      CalendarFormat.month: 'חודש',
+                      CalendarFormat.week: 'שבוע',
+                    },
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible: false,
+                      titleCentered: true,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
 
-          Expanded (
-              child: Container(
-                color: Colors.white,
-                child: StreamBuilder(
-                  stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
-                  builder: (context, snapshot) {
-                    if(snapshot.hasData){
-                      //print(snapshot.data);
-                      List l = snapshot.data as List;
-                      //print(l);
-                      return ListView(
-                        //children: buildList(DateTime.now()),
-                        children: buildList(l),
-                      );
+            Expanded (
+                child: Container(
+                  padding: EdgeInsets.only(top:10),
+                  color: Colors.teal[300],
+                  child: StreamBuilder(
+                    stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData){
+                        //print(snapshot.data);
+                        List l = snapshot.data as List;
+                        //print(l);
+                        return ListView(
+                          //children: buildList(DateTime.now()),
+                          children: buildList(l),
+                        );
+                      }
+                      else{
+                        return Center(
+                          child: Text(
+                            'לא היו פגישות בתאריך זה'
+                            , style: TextStyle(fontSize: 20),),
+                        );
+                      }
                     }
-                    else{
-                      return Center(
-                        child: Text(
-                          'לא היו פגישות בתאריך זה'
-                          , style: TextStyle(fontSize: 20),),
-                      );
-                    }
-                  }
-                ),
-                //alignment: Alignment.topRight,
-              )
-          ),
-        ],
+                  ),
+                  //alignment: Alignment.topRight,
+                )
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -252,7 +275,7 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(10),
+              //padding: EdgeInsets.all(10),
               //alignment: Alignment.centerLeft,
               child: Column(
                   children: [
@@ -276,6 +299,10 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
                     ),
                   ]
               ),
+            ),
+            VerticalDivider(
+              color: Colors.grey[400],
+              thickness: 1,
             ),
             Container(
               //padding: const EdgeInsets.all(10),
@@ -304,11 +331,11 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
                       height: 50,
                       child: AutoSizeText(
                         description,
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: Colors.grey[400],
                           fontSize: 6,
                           fontFamily: 'Roboto',
-                          //fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w700,
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 3,
@@ -426,10 +453,10 @@ class _DoctorsListState extends State<DoctorsList> {
                   children: [
                     Container(
                         padding: EdgeInsets.all(6),
-                        color: Colors.yellow[50],
+                        color: Colors.grey[200],
                         height: 70,
                         width: 350,
-                        child: const AutoSizeText("דר כרמי הגיעה לבדוק לשלומי ובבדיקת המדדים שביצעה נראה שהכל תקין",
+                        child: const AutoSizeText(" ",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,

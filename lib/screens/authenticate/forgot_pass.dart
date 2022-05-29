@@ -22,7 +22,7 @@ class ForgotPassScreen extends StatelessWidget {
       child: Scaffold(
         body:
         Container(
-          color: AppColors.mainYellow,
+          color: AppColors.mainWhite,
           child: Form(
             key: _formKey,
             child: Column(
@@ -35,7 +35,7 @@ class ForgotPassScreen extends StatelessWidget {
                     "שחזור סיסמה",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF2661FA),
+                        color: Colors.black,
                         fontSize: 36
                     ),
                     textAlign: TextAlign.left,
@@ -69,7 +69,18 @@ class ForgotPassScreen extends StatelessWidget {
                 ),
 
                 SizedBox(height: size.height * 0.03),
-
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.only(right: 20),
+                  child: Text(
+                    "במידה והמייל לא מופיע בתיבת הדואר יש לבדוק בתיבת הספאם",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.indigo.shade900
+                    ),
+                  ),
+                ),
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
@@ -91,19 +102,15 @@ class ForgotPassScreen extends StatelessWidget {
                       width: size.width * 0.5,
                       decoration: new BoxDecoration(
                           borderRadius: BorderRadius.circular(80.0),
-                          gradient: new LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 255, 136, 34),
-                                Color.fromARGB(255, 255, 177, 41)
-                              ]
-                          )
+                          color: Colors.teal[300],
                       ),
                       padding: const EdgeInsets.all(0),
                       child: Text(
                         "שלח סיסמה למייל",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.mainWhite,
                         ),
                       ),
                     ),
@@ -111,19 +118,8 @@ class ForgotPassScreen extends StatelessWidget {
                 ),
 
                 Container(
-                  alignment: Alignment.center,
-                    child: Text(
-                      "במידה והמייל לא מופיע בתיבת הדואר יש לבדוק בתיבת הספאם",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2661FA)
-                      ),
-                    ),
-                ),
-                Container(
                   alignment: Alignment.centerRight,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  margin: EdgeInsets.only(right: 20, top: 30),
                   child: GestureDetector(
                     onTap: (){
                       toggleView(2);
@@ -133,14 +129,14 @@ class ForgotPassScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF2661FA)
+                          color: Colors.indigo.shade900
                       ),
                     ),
                   ),
                 ),
                 Container(
                   alignment: Alignment.centerRight,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: GestureDetector(
                     onTap: (){
                       toggleView(1);
@@ -150,7 +146,7 @@ class ForgotPassScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF2661FA)
+                          color: Colors.indigo.shade900
                       ),
                     ),
                   ),
