@@ -73,33 +73,33 @@ class LoginScreen extends StatelessWidget {
 
                     SizedBox(height: size.height * 0.03),
 
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.symmetric(horizontal: 40),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "סיסמה"
-                        ),
-                        validator: (val){
-                          if(val==null){
-                            return null;
-                          }
-                          if(val.isEmpty)
-                            return 'הכנס סיסמה';
-                          if(val.length < 8)
-                            return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
-                          for(int i=0; i< val.length; i++){
-                            if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
-                              return 'הוכנס תו לא חוקי בסיסמה';
-                          }
-                          return null;
-                        },
-                        onChanged: (val) {
-                          password = val;
-                        },
-                        obscureText: true,
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 40),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "סיסמה"
                       ),
+                      validator: (val){
+                        if(val==null){
+                          return null;
+                        }
+                        if(val.isEmpty)
+                          return 'הכנס סיסמה';
+                        if(val.length < 6)
+                          return 'הסיסמה חייבת להיות באורך 6 תווים לפחות';
+                        for(int i=0; i< val.length; i++){
+                          if(val[i] == '\'' || val[i] == '\;' || val[i] == ' ')
+                            return 'הוכנס תו לא חוקי בסיסמה';
+                        }
+                        return null;
+                      },
+                      onChanged: (val) {
+                        password = val;
+                      },
+                      obscureText: true,
                     ),
+                  ),
 
                     Container(
                       alignment: Alignment.centerLeft,

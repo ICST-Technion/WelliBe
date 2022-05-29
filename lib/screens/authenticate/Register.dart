@@ -136,8 +136,8 @@ class RegisterScreen extends StatelessWidget {
                               }
                               if(val.trim().isEmpty)
                                 return 'הכנס סיסמה';
-                              if(val.trim().length < 8)
-                                return 'הסיסמה חייבת להיות באורך 8 תווים לפחות';
+                              if(val.trim().length < 6)
+                                return 'הסיסמה חייבת להיות באורך 6 תווים לפחות';
                               for(int i=0; i< val.trim().length; i++){
                                 if(val.trim()[i] == '\'' || val.trim()[i] == '\;' || val.trim()[i] == ' ')
                                   return 'הוכנס תו לא חוקי בסיסמה';
