@@ -18,15 +18,17 @@ class DatabaseService {
   /////////////////////////////// users functions ////////////////////////////
 
   //adds user to users collection. needs to be called from sign up method.
-  Future updateUserData(String url, String name, String email, String password) async {
+  Future updateUserData(String url, String name, String email, String password, String role) async {
     return await usersInfoCollection.doc(uid).set({
       'url' : url,
       'email' : email,
       'password' : password,
       'name' : name,
       'doctors' : " ",
+      'role' : role,
   });
   }
+
 
   Future updateUserName(String name) async{
     return await usersInfoCollection.doc(uid).update({'name' : name});
@@ -134,6 +136,36 @@ class DatabaseService {
     });
   }
 
+  Stream<String> getRoleInner() {
+    return usersInfoCollection
+        .doc(uid)
+        .snapshots()
+        .map((doc) {
+      if (doc['role'] is String &&
+          (doc['role'] as String).isNotEmpty) {
+        print(doc['role']);
+        return doc['role'];
+      } else {
+        print(doc['role']);
+        return "nothing";
+      }
+    });
+  }
+
+  Stream<String> getEmailInner(){
+    return usersInfoCollection
+        .doc(uid)
+        .snapshots()
+        .map((doc) {
+      if (doc['email'] is String &&
+          (doc['email'] as String).isNotEmpty) {
+        return doc['email'];
+      } else {
+        print(doc['email']);
+        return "nothing";
+      }
+    });
+  }
 
   ////////////////////////////// doctors functions //////////////////////////////////
   /// the uid entered doesnt matter in the doctors functions... as it only matters in the Users functions
@@ -279,19 +311,7 @@ class DatabaseService {
     return usersInfoCollection.snapshots() as QuerySnapshot;
   }
 
-  //userData from snapshot
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
-    return UserData(
-      uid : uid,
-      url : snapshot.get('url'),
-      name: snapshot.get('name'),
-    );
-  }
 
-  //get user doc stream
-  Stream<UserData> get userData {
-    return usersInfoCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
-  }
 
   Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
     // doctor_id is doctor's email

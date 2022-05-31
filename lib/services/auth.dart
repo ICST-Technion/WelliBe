@@ -13,7 +13,16 @@ class AuthService {
 
   //create user object
   UserClass? _userFromFirebaseUser(User? user){
-    return user != null ? UserClass(uid: user.uid, url: user.photoURL, name: user.displayName) : null;
+    return user != null ? UserClass(uid: user.uid, url: user.photoURL, name: user.displayName, role: 'user') : null;
+  }
+
+  DoctorClass? _doctorFromFirebaseUser(User? user, String email){
+    return user != null ? DoctorClass(uid: email, url: user.photoURL, name: user.displayName, role: 'doctor') : null;
+  }
+
+
+  SystemUsers? _systemUserFromFirebase(User? user){
+    return user != null ? SystemUsers(uid: user.uid, url: user.photoURL, name: user.displayName) : null;
   }
 
   //auth change user stream
@@ -47,7 +56,6 @@ class AuthService {
     }
     
   }
-  //here we call the _populateCurrentUser(result.user)
 
   //register with email and password
   //here we need to call the database service function updateUserData inorder to create new user in firebase
@@ -56,13 +64,25 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       //create a new document for the user with the uid
-      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password);
+      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'user');
       return _userFromFirebaseUser(user);
     }catch(e){
       print(e.toString());
     }
   }
 
+  Future doctorRegisterWithEmailAndPassword(String name, String email, String password) async {
+    try{
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = result.user;
+      //create a new document for the user with the uid
+      await DatabaseService(uid: user?.uid).updateDoctorData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, "", '', '', '', email);
+      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'doctor');
+      return _userFromFirebaseUser(user);
+    }catch(e){
+      print(e.toString());
+    }
+  }
   //sign out
   Future signOut() async {
     try{

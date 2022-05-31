@@ -9,6 +9,7 @@ import 'package:wellibe_proj/screens/wrapper.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
+import 'package:wellibe_proj/services/database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ void main() async {
 
 class MyApp extends StatelessWidget{
   const MyApp({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
