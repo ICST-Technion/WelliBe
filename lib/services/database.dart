@@ -17,6 +17,16 @@ class DatabaseService {
 
   /////////////////////////////// users functions ////////////////////////////
 
+  Future<List> getDocs() async {
+    List ls = [];
+    QuerySnapshot querySnapshot = await doctorsInfoCollection.get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i].data();
+      ls.add(a);
+    }
+    return ls;
+  }
+
   //adds user to users collection. needs to be called from sign up method.
   Future updateUserData(String url, String name, String email, String password, String role) async {
     return await usersInfoCollection.doc(uid).set({
@@ -297,6 +307,7 @@ class DatabaseService {
       }
     });
   }
+
 
 
 

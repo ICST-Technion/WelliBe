@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:wellibe_proj/screens/hospitals_view/doctors_grid.dart';
 
 import 'package:wellibe_proj/screens/wrapper.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
+
+import 'assets/wellibe_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +40,12 @@ class MyApp extends StatelessWidget{
         // Check for errors
           if (snapshot.hasError) {
             print(snapshot.error);
-            return SomethingWentWrong();
-          }
+            return Container(
+              color: AppColors.mainWhite,
+              child: Center(
+                child: SomethingWentWrong(),
+              ),
+            );          }
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
@@ -48,14 +55,18 @@ class MyApp extends StatelessWidget{
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: MaterialApp(
-                home: Wrapper(),
+                home: DoctorsGrid(),
                 ),
               ),
             );
           }
           // Otherwise, show something whilst waiting for initialization to complete
-          return SomethingWentWrong();
-      },
+          return Container(
+            color: AppColors.mainWhite,
+            child: Center(
+              child: SomethingWentWrong(),
+            ),
+          );      },
     );
 
   }

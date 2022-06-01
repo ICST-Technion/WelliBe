@@ -7,6 +7,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 
 import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
+import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
@@ -146,6 +147,9 @@ class _TestPageState extends State<TestPage> {
                                   if(snapshot.hasData) {
                                     name = snapshot.data;
                                   }
+                                  else{
+                                    return SomethingWentWrong();
+                                  }
                                   return Text(
                                     name!,
                                     style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black), //Colors.indigo.shade900),
@@ -170,6 +174,9 @@ class _TestPageState extends State<TestPage> {
                             builder: (context, snapshot) {
                               if(snapshot.hasData) {
                                 img = snapshot.data;
+                              }
+                              else{
+                                return SomethingWentWrong();
                               }
                               return GestureDetector(
                                 onTap: (){
@@ -408,17 +415,26 @@ class _DoctorsListState extends State<DoctorsList> {
                 if(snapshot.hasData){
                   name = snapshot.data as String;
                 }
+                else{
+                  return SomethingWentWrong();
+                }
                 return StreamBuilder<Object>(
                   stream: DatabaseService.getDoctorUrlInner(email),
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
                       url = snapshot.data as String;
                     }
+                    else{
+                      return SomethingWentWrong();
+                    }
                     return StreamBuilder<Object>(
                       stream: _data.getDoctorPosInner(email),
                       builder: (context, snapshot) {
                         if(snapshot.hasData){
                           pos = snapshot.data as String;
+                        }
+                        else{
+                          return SomethingWentWrong();
                         }
                         return FlatButton(
                             onPressed: showToast,

@@ -25,10 +25,9 @@ class _SomethingWentWrong extends State<SomethingWentWrong> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     return Container(
-        color: AppColors.mainWhite,
+        color: Colors.transparent,
         child: CircularProgressIndicator(
           value: 0.8,
         ),
