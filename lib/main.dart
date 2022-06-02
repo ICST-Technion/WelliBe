@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:wellibe_proj/screens/home/admin_home.dart';
 import 'package:wellibe_proj/screens/hospitals_view/doctors_grid.dart';
 
 import 'package:wellibe_proj/screens/wrapper.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget{
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: MaterialApp(
-                home: DoctorsGrid(),
+                home: AdminHome(),
                 ),
               ),
             );
