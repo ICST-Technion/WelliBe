@@ -50,13 +50,14 @@ class MyApp extends StatelessWidget{
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
+            print("YYYYYESSSSSSSSSSSSSSSSSss");
             return StreamProvider<UserClass?>.value(
               initialData: null,
               value: AuthService().user,
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: MaterialApp(
-                home: AdminHome(),
+                home: Wrapper(),
                 ),
               ),
             );
