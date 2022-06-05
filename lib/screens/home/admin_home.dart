@@ -80,7 +80,6 @@ class _AdminHomeState extends State<AdminHome> {
                                       if(snapshot.hasData){
                                         return GestureDetector(
                                           onTap: (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -166,7 +165,7 @@ class _AdminHomeState extends State<AdminHome> {
                         color: AppColors.mainWhite,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Grid()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorsGrid()));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
