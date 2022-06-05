@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget{
           }
           // Otherwise, show something whilst waiting for initialization to complete
           return Container(
-            color: AppColors.mainWhite,
+            color: Colors.white,
             child: Center(
               child: SomethingWentWrong(),
             ),

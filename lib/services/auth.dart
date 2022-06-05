@@ -87,7 +87,6 @@ class AuthService {
   Future signOut() async {
     try{
       print(_auth.currentUser?.uid);
-      //_auth.currentUser?.delete();
       return await _auth.signOut();
     }catch(e){
       print(e.toString());
