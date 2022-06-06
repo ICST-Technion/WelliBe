@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
-
 import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
@@ -34,7 +33,7 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-
+  final _key = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
 
@@ -82,6 +81,7 @@ class _TestPageState extends State<TestPage> {
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -95,12 +95,17 @@ class _TestPageState extends State<TestPage> {
                 print("sign out");
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.qr_code_2, color: Colors.black,),
-              iconSize: 40,
-              onPressed: () async {
-                scanQR();
-              },
+            Tooltip(
+              message: 'לחץ לסריקת הרופא',
+              showDuration: const Duration(seconds: 2),
+              waitDuration: const Duration(seconds: 1),
+              child: IconButton(
+                icon: const Icon(Icons.qr_code_2, color: Colors.black,),
+                iconSize: 40,
+                onPressed: () async {
+                  scanQR();
+                },
+              ),
             ),
           ],
         ),
@@ -166,34 +171,39 @@ class _TestPageState extends State<TestPage> {
                       Padding(padding: EdgeInsets.all(5)),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          padding: const EdgeInsets.only(right: 15),
-                          child: StreamBuilder<String>(
-                            stream: _data.getUrlInner(),
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData) {
-                                img = snapshot.data;
-                              }
-                              else{
-                                return SomethingWentWrong();
-                              }
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundColor: Colors.black,
+                        child: Tooltip(
+                          message: "צפייה בפרופיל",
+                          showDuration: const Duration(seconds: 2),
+                          waitDuration: const Duration(seconds: 1),
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: StreamBuilder<String>(
+                              stream: _data.getUrlInner(),
+                              builder: (context, snapshot) {
+                                if(snapshot.hasData) {
+                                  img = snapshot.data;
+                                }
+                                else{
+                                  return SomethingWentWrong();
+                                }
+                                return GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: CircleAvatar(
-                                      radius: 45,
-                                      backgroundImage: NetworkImage(img!),
+                                      radius: 50,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        radius: 45,
+                                        backgroundImage: NetworkImage(img!),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
+                                );
+                              }
+                            ),
                           ),
                         )
                       ),
@@ -267,6 +277,17 @@ class _TestPageState extends State<TestPage> {
                   //alignment: Alignment.topRight,
                 )
             ),
+            BottomAppBar(
+                color: Colors.transparent,
+                child: Align(
+                  child:  Tooltip(
+                    showDuration: const Duration(seconds: 2),
+                    waitDuration: const Duration(seconds: 1),
+                    message: 'לחץ ארוף על כפתורים אחרים להצגת מידע',
+                    child: const Icon(Icons.help, color: Colors.black,),
+                  ),
+                )
+            )
           ],
         ),
       ),
