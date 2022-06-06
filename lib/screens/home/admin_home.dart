@@ -1,17 +1,13 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:wellibe_proj/screens/hospitals_view/doctors_grid.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
-import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
-import '../view_page.dart';
 
 final AuthService _auth = AuthService();
-
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
   @override
