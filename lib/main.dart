@@ -40,35 +40,20 @@ class MyApp extends StatelessWidget{
       builder: (context, snapshot) {
         // Check for errors
           if (snapshot.hasError) {
-            print(snapshot.error);
-            return Container(
-              color: AppColors.mainWhite,
-              child: Center(
-                child: SomethingWentWrong(),
-              ),
-            );          }
-
+            return CircularProgressIndicator();
+          }
+          else if (!snapshot.hasData){
+            return CircularProgressIndicator();
+          }
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            print("YYYYYESSSSSSSSSSSSSSSSSss");
-            return StreamProvider<UserClass?>.value(
-              initialData: null,
-              value: AuthService().user,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: MaterialApp(
-                home: Wrapper(),
-                ),
-              ),
+            return MaterialApp(
+              home: Wrapper(),
             );
           }
           // Otherwise, show something whilst waiting for initialization to complete
-          return Container(
-            color: Colors.white,
-            child: Center(
-              child: SomethingWentWrong(),
-            ),
-          );      },
+          return SomethingWentWrong();
+      }
     );
 
   }

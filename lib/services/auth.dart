@@ -9,20 +9,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   late UserClass? _currentUser = _userFromFirebaseUser(_auth.currentUser);
-  //UserClass get currentUser => _currentUser;
 
   //create user object
   UserClass? _userFromFirebaseUser(User? user){
-    return user != null ? UserClass(uid: user.uid, url: user.photoURL, name: user.displayName, role: 'user') : null;
-  }
-
-  DoctorClass? _doctorFromFirebaseUser(User? user, String email){
-    return user != null ? DoctorClass(uid: email, url: user.photoURL, name: user.displayName, role: 'doctor') : null;
-  }
-
-
-  SystemUsers? _systemUserFromFirebase(User? user){
-    return user != null ? SystemUsers(uid: user.uid, url: user.photoURL, name: user.displayName) : null;
+    return user != null ? UserClass(uid: user.uid, url: user.photoURL, name: user.displayName) : null;
   }
 
   //auth change user stream
