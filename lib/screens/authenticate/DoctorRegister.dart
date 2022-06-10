@@ -5,9 +5,8 @@ import 'package:wellibe_proj/services/database.dart';
 import '../../assets/wellibe_colors.dart';
 import 'Login.dart';
 
-class RegisterScreen extends StatelessWidget {
-  final Function toggleView;
-  RegisterScreen({required this.toggleView});
+class DRegisterScreen extends StatelessWidget {
+  DRegisterScreen();
 
   final AuthService _auth = AuthService();
 
@@ -206,25 +205,7 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ),
 
-                        Container(
-                          alignment: Alignment.centerRight,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: GestureDetector(
-                            onTap: ()
-                            {
-                              toggleView(1);
-                            },
-                            child: Text(
-                              "כבר קיים חשבון? התחבר כאן",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                          ),
-                        )
+
                       ]
                   )
               )

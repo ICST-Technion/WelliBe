@@ -9,6 +9,7 @@ import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import '../view_page.dart';
+import '../authenticate/DoctorRegister.dart'
 
 final AuthService _auth = AuthService();
 
@@ -147,6 +148,8 @@ class _TestAdminHome extends State<TestAdminHome> {
                         color: AppColors.mainWhite,
                         child: ElevatedButton(
                           onPressed: () {
+                            //register doctor here
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DRegisterScreen()));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
