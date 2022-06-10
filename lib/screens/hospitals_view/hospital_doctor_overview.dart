@@ -39,7 +39,7 @@ class _HospitalDoctorOverviewState extends State<HospitalDoctorOverview> {
                           child: IconButton(
                             icon: Icon(Icons.arrow_back),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const DoctorsGrid()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorsGrid()));
                               },
                           ),
                         ),

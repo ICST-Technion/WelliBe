@@ -9,7 +9,6 @@ import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
-import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/screens/card.dart';

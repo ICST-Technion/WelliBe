@@ -1,19 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:loading_overlay/loading_overlay.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
-import 'package:wellibe_proj/screens/authenticate/authenticate.dart';
-import 'package:wellibe_proj/screens/histoy_qr.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:wellibe_proj/screens/home/admin_home.dart';
-import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
-import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-
 import '../assets/wellibe_colors.dart';
 import 'doctor_overview.dart';
 
