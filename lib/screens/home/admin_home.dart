@@ -9,7 +9,7 @@ import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import '../view_page.dart';
-import '../authenticate/DoctorRegister.dart'
+import '../authenticate/DoctorRegister.dart';
 
 final AuthService _auth = AuthService();
 

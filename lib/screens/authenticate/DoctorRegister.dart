@@ -13,6 +13,8 @@ class DRegisterScreen extends StatelessWidget {
   String firstName = "";
 
   String familyName = "";
+  String positionName = "";
+  String speciality = "";
 
   String email = "";
 
@@ -98,6 +100,7 @@ class DRegisterScreen extends StatelessWidget {
                           ),
                         ),
 
+
                         Container(
                           alignment: Alignment.center,
                           margin: EdgeInsets.symmetric(horizontal: 40),
@@ -165,6 +168,48 @@ class DRegisterScreen extends StatelessWidget {
                             ,
                           ),
                         ),
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 40),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                labelText: "תפקיד"
+                            ),
+                            validator: (val) {
+                              if(val == null || val.trim().length == 0){
+                                return  'הכנס תפקיד';
+                              }
+                              if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
+                                return 'שם תפקיד לא חוקי';
+
+                              return null;
+                            },
+                            onChanged: (val) {
+                              positionName = val.trim();
+                            },
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 40),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                labelText: "מומחיות (אופציונלי)"
+                            ),
+                            validator: (val) {
+                              if(val == null || val.trim().length == 0){
+                                return null;
+                              }
+                              if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
+                                return 'תיאור מומחיות לא חוקי';
+                              return null;
+                            },
+                            onChanged: (val) {
+                              speciality = val.trim();
+                            },
+                          ),
+                        ),
+
 
                         SizedBox(height: size.height * 0.03),
 
@@ -175,7 +220,7 @@ class DRegisterScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()){
-                                dynamic result = await _auth.doctorRegisterWithEmailAndPassword(firstName+" "+familyName, email, password);
+                                dynamic result = await _auth.doctorRegisterWithEmailAndPassword(firstName+" "+familyName, email, password, positionName, speciality);
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryQr()));
                               }
                             },
