@@ -63,12 +63,14 @@ class AuthService {
 
   Future doctorRegisterWithEmailAndPassword(String name, String email, String password, String position, String speciality) async {
     try{
+
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
+      User? new_user = result.user;
       //create a new document for the user with the uid
-      await DatabaseService(uid: user?.uid).updateDoctorData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, speciality, position, '', '', email);
-      await DatabaseService(uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'doctor');
-      return _userFromFirebaseUser(user);
+      await DatabaseService(uid: new_user?.uid).updateDoctorData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, speciality, position, '', '', email);
+      await DatabaseService(uid: new_user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'doctor');
+
+      return _userFromFirebaseUser(new_user);
     }catch(e){
       print(e.toString());
     }
