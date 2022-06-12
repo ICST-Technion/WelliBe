@@ -195,6 +195,20 @@ class DatabaseService {
     });
   }
 
+  static Future getDoctorsCards(String email) async {
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+    final files = await storage.ref().child("files/" + email + "/").listAll();
+    List<String> urls = [];
+    for(var file in files.items) {
+      await file.getDownloadURL().then((value) {
+        String val = value.toString();
+        urls.add(val);
+      });
+    }
+    return urls;
+  }
+
   //return doctors name based on his unique value
   static Stream<String> getDoctorNameInner(String email) {
     return FirebaseFirestore.instance.collection('doctorsInfo')
@@ -331,14 +345,14 @@ class DatabaseService {
 
     if (photo == null) return;
     final fileName = (path);
-    final destination = 'files/';
+    final destination = 'files/' + doctor_id + '/';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
           .child(path);
       await ref.putData(photo);
-      var d = {'photo': path, 'username': username};
+      var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
       var l = [d];
       // TODO: change doctor mail to be adaptive
       doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
