@@ -5,6 +5,7 @@ import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
+import 'package:wellibe_proj/screens/card_viewer.dart';
 import '../assets/wellibe_colors.dart';
 import 'doctor_overview.dart';
 
@@ -37,7 +38,7 @@ class _Security extends State<Security> {
                   stream: _data.getEmailInner(),
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
-                      return DoctorOverview(email: snapshot.data as String);
+                      return CardViewer(email: snapshot.data as String);
                     }
                     return Container(
                       color: AppColors.mainWhite,
