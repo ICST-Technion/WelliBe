@@ -7,6 +7,7 @@ import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/screens/card_viewer.dart';
 import '../assets/wellibe_colors.dart';
+import 'authenticate/Login.dart';
 import 'doctor_overview.dart';
 
 
@@ -20,6 +21,12 @@ class Security extends StatefulWidget {
 //wraps the home screen and returns us back to sign in if logged out
 class _Security extends State<Security> {
   AuthService _auth = AuthService();
+  int showSignIn = 1;
+  void toggleView(int nextView) {
+    if(nextView >= 1 || nextView <= 3)
+      setState(()=> showSignIn = nextView);
+  }
+
   @override
   Widget build(BuildContext context) {
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
@@ -31,9 +38,11 @@ class _Security extends State<Security> {
           if(snapshot.hasData) {
             print(snapshot.data);
             if(snapshot.data == 'user'){
+              print("user");
               return ViewPage();
             }
             if(snapshot.data == 'doctor'){
+              print("doctor");
               return StreamBuilder(
                   stream: _data.getEmailInner(),
                   builder: (context, snapshot) {
@@ -49,15 +58,12 @@ class _Security extends State<Security> {
                   );
             }
             else{
+              print("admin");
               return AdminHome();
             }
           }
-          return Container(
-            color: AppColors.mainWhite,
-            child: Center(
-              child: SomethingWentWrong(),
-            ),
-          );
+          //return LoginScreen(toggleView: toggleView, error: 'לא קיים משתמש כזה');
+          return Center(child: SomethingWentWrong());
         }
     );
   }

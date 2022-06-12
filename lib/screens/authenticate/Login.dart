@@ -5,15 +5,16 @@ import 'Register.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
-  LoginScreen({required this.toggleView});
+  String error;
+  LoginScreen({required this.toggleView, this.error = ''});
   @override
-  _LoginScreen createState() => _LoginScreen(toggleView: this.toggleView);
+  _LoginScreen createState() => _LoginScreen(toggleView: this.toggleView, error: this.error);
 }
 class _LoginScreen extends State<LoginScreen> {
   final Function toggleView;
-  _LoginScreen({required this.toggleView});
+  String error;
+  _LoginScreen({required this.toggleView, this.error = ''});
 
-  String error = '';
   String email = "";
   String password = "";
   final _formKey = GlobalKey<FormState>();
@@ -136,7 +137,7 @@ class _LoginScreen extends State<LoginScreen> {
                           if (_formKey.currentState!.validate()){
                             dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                             if(result==null){
-                              setState( () => error = 'לא קיים משתמש כזה');
+                              setState( () => error = 'שם משתמש או סיסמא לא נכונים');
                             }
                           }
                         },

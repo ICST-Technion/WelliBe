@@ -16,17 +16,6 @@ class DoctorsGrid extends StatefulWidget {
   _DoctorsGridState createState() => _DoctorsGridState();
 }
 
-List<DoctorsList> buildList(List docs){
-  List<DoctorsList> doctorsList = [];
-  if (docs == null) {
-    doctorsList.add(DoctorsList(key: Key("100"), counter: -100, arr: docs));
-    return doctorsList;
-  }
-  for(int i = 0; i < docs.length; i++) {
-    doctorsList.add(DoctorsList(key: Key(DateTime.now().toLocal().toString()), counter: i, arr: docs[i]));
-  }
-  return doctorsList;
-}
 AuthService _auth = AuthService();
 
 

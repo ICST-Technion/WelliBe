@@ -27,6 +27,16 @@ class DatabaseService {
     return ls;
   }
 
+  Future<List> getUsers() async {
+    List ls = [];
+    QuerySnapshot querySnapshot = await usersInfoCollection.get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i].data();
+      ls.add(a);
+    }
+    return ls;
+  }
+
   //adds user to users collection. needs to be called from sign up method.
   Future updateUserData(String url, String name, String email, String password, String role) async {
     return await usersInfoCollection.doc(uid).set({
@@ -56,15 +66,15 @@ class DatabaseService {
     return await usersInfoCollection.doc(uid).update({url : url});
   }
 
-  Future addDoctor(String email) async {
-
-  }
-
-
   //add map of date and doctor id
   Future addMap(int day, int month, int year, String time, String duid) async{
     String date = day.toString() + "-" + month.toString() + "-" + year.toString();
-    return await usersInfoCollection.doc(uid).update({"doctors.$date.$time" : duid });
+    return await usersInfoCollection.doc(uid).update({"doctors.$date.$time" : [duid, ""] });
+  }
+
+  Future updateMsg(String msg, DateTime day, String hour, String email) async{
+    var sday = day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString();
+    return await usersInfoCollection.doc(uid).update({"doctors.$sday.$hour" : [email, msg] });
   }
 
   Stream<List> fromDateToList(int day, int month, int year){
@@ -89,6 +99,7 @@ class DatabaseService {
        return l;
     });
   }
+
 
   Stream<String> getUserNameInner() {
     return usersInfoCollection

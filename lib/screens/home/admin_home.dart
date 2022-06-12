@@ -7,6 +7,8 @@ import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
 
+import '../hospitals_view/patients_grid.dart';
+
 final AuthService _auth = AuthService();
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
@@ -204,6 +206,7 @@ class _TestAdminHome extends State<TestAdminHome> {
                         color: AppColors.mainWhite,
                         child: ElevatedButton(
                           onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PatientsGrid()));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
@@ -261,7 +264,6 @@ class _TestAdminHome extends State<TestAdminHome> {
 // import 'package:wellibe_proj/services/auth.dart';
 // import 'package:wellibe_proj/services/database.dart';
 //
-// import '../grid.dart';
 //
 // //wraps the home screen and returns us back to sign in if logged out
 // class AdminHome extends StatefulWidget {
