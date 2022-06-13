@@ -6,6 +6,9 @@ import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
+import '../view_page.dart';
+import '../authenticate/DoctorRegister.dart';
+
 
 import '../hospitals_view/patients_grid.dart';
 
@@ -145,6 +148,8 @@ class _TestAdminHome extends State<TestAdminHome> {
                         color: AppColors.mainWhite,
                         child: ElevatedButton(
                           onPressed: () {
+                            //register doctor here
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DRegisterScreen()));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
