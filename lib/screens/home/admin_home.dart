@@ -1,18 +1,18 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:wellibe_proj/screens/hospitals_view/doctors_grid.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
-import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import '../view_page.dart';
 import '../authenticate/DoctorRegister.dart';
 
-final AuthService _auth = AuthService();
 
+import '../hospitals_view/patients_grid.dart';
+
+final AuthService _auth = AuthService();
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
   @override
@@ -110,7 +110,7 @@ class _TestAdminHome extends State<TestAdminHome> {
                                       img = snapshot.data;
                                     }
                                     else{
-                                      return SomethingWentWrong();
+                                      return Center(child: SomethingWentWrong());
                                     }
                                     return GestureDetector(
                                       onTap: (){
@@ -211,6 +211,7 @@ class _TestAdminHome extends State<TestAdminHome> {
                         color: AppColors.mainWhite,
                         child: ElevatedButton(
                           onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PatientsGrid()));
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
@@ -268,7 +269,6 @@ class _TestAdminHome extends State<TestAdminHome> {
 // import 'package:wellibe_proj/services/auth.dart';
 // import 'package:wellibe_proj/services/database.dart';
 //
-// import '../grid.dart';
 //
 // //wraps the home screen and returns us back to sign in if logged out
 // class AdminHome extends StatefulWidget {

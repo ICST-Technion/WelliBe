@@ -45,6 +45,9 @@ dependencies:
   barcode_scan2: ^4.2.0
   image_picker: ^0.8.5+3
   loading_overlay: ^0.3.0
+  hovering: ^1.0.4
+  galleryimage: ^1.2.0
+  auto_size_text_field: ^2.0.0
 
 
 dev_dependencies:

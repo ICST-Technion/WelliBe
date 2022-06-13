@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
-
 import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
@@ -12,6 +11,9 @@ import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/screens/card.dart';
+import 'package:auto_size_text_field/auto_size_text_field.dart';
+
+import '../assets/wellibe_colors.dart';
 
 final AuthService _auth = AuthService();
 
@@ -34,27 +36,19 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-
+  final _key = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-
-  bool _isVisible = false;
-
-  void showToast() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
-  }
   
   //List<DoctorsList> doctorsList = [];
-  List<DoctorsList> buildList(List docs){
+  List<DoctorsList> buildList(List docs, DateTime day){
     List<DoctorsList> doctorsList = [];
     if (docs == null) {
-      doctorsList.add(DoctorsList(key: Key("100"), counter: -100, arr: docs));
+      doctorsList.add(DoctorsList(key: Key("100"), counter: -100, arr: docs, day: day));
       return doctorsList;
     }
     for(int i = 0; i < docs.length; i++) {
-      doctorsList.add(DoctorsList(key: Key(DateTime.now().toLocal().toString()), counter: i, arr: docs[i]));
+      doctorsList.add(DoctorsList(key: Key(DateTime.now().toLocal().toString()), counter: i, arr: docs[i], day: day));
     }
     return doctorsList;
   }
@@ -82,6 +76,8 @@ class _TestPageState extends State<TestPage> {
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
     return Scaffold(
+      key: _key,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -95,12 +91,17 @@ class _TestPageState extends State<TestPage> {
                 print("sign out");
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.qr_code_2, color: Colors.black,),
-              iconSize: 40,
-              onPressed: () async {
-                scanQR();
-              },
+            Tooltip(
+              message: 'לחץ לסריקת הרופא',
+              showDuration: const Duration(seconds: 2),
+              waitDuration: const Duration(seconds: 1),
+              child: IconButton(
+                icon: const Icon(Icons.qr_code_2, color: Colors.black,),
+                iconSize: 40,
+                onPressed: () async {
+                  scanQR();
+                },
+              ),
             ),
           ],
         ),
@@ -166,34 +167,39 @@ class _TestPageState extends State<TestPage> {
                       Padding(padding: EdgeInsets.all(5)),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          padding: const EdgeInsets.only(right: 15),
-                          child: StreamBuilder<String>(
-                            stream: _data.getUrlInner(),
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData) {
-                                img = snapshot.data;
-                              }
-                              else{
-                                return SomethingWentWrong();
-                              }
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundColor: Colors.black,
+                        child: Tooltip(
+                          message: "צפייה בפרופיל",
+                          showDuration: const Duration(seconds: 2),
+                          waitDuration: const Duration(seconds: 1),
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: StreamBuilder<String>(
+                              stream: _data.getUrlInner(),
+                              builder: (context, snapshot) {
+                                if(snapshot.hasData) {
+                                  img = snapshot.data;
+                                }
+                                else{
+                                  return SomethingWentWrong();
+                                }
+                                return GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: CircleAvatar(
-                                      radius: 45,
-                                      backgroundImage: NetworkImage(img!),
+                                      radius: 50,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        radius: 45,
+                                        backgroundImage: NetworkImage(img!),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
+                                );
+                              }
+                            ),
                           ),
                         )
                       ),
@@ -252,7 +258,7 @@ class _TestPageState extends State<TestPage> {
                         //print(l);
                         return ListView(
                           //children: buildList(DateTime.now()),
-                          children: buildList(l),
+                          children: buildList(l, _selectedDay),
                         );
                       }
                       else{
@@ -267,6 +273,17 @@ class _TestPageState extends State<TestPage> {
                   //alignment: Alignment.topRight,
                 )
             ),
+            BottomAppBar(
+                color: Colors.transparent,
+                child: Align(
+                  child:  Tooltip(
+                    showDuration: const Duration(seconds: 2),
+                    //waitDuration: const Duration(seconds: 1),
+                    message: 'לחץ ארוך על סמלים להצגת מידע',
+                    child: const Icon(Icons.help, color: Colors.black,),
+                  ),
+                )
+            )
           ],
         ),
       ),
@@ -281,8 +298,6 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              //padding: EdgeInsets.all(10),
-              //alignment: Alignment.centerLeft,
               child: Column(
                   children: [
                     const Text(
@@ -380,32 +395,43 @@ Widget demoDoctorsToDate(String image, String name, String description, String h
 class DoctorsList extends StatefulWidget {
   final counter;
   final arr;
-  DoctorsList({required Key key, required this.counter, required this.arr}) : super(key: key);
+  final day;
+  DoctorsList({required Key key, required this.counter, required this.arr, required this.day}) : super(key: key);
 
   @override
-  _DoctorsListState createState() => _DoctorsListState(arr, counter);
+  _DoctorsListState createState() => _DoctorsListState(arr, counter, day);
 }
 
 class _DoctorsListState extends State<DoctorsList> {
   var arr;
   var counter;
-  _DoctorsListState(this.arr, this.counter);
+  var day;
+  _DoctorsListState(this.arr, this.counter, this.day);
+
 
   final DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
   bool _isVisible = false;
   var name = "אנונימי";
   var url = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
   var pos = '';
-
   void showToast() {
     setState(() {
       _isVisible = !_isVisible;
     });
   }
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    var email = arr[0];
+    Size size = MediaQuery
+        .of(context)
+        .size;
+
+    var list = arr[0];
+    var email = list[0];
+    var msg = list[1];
     var hour = arr[1];
+
     return Column(
       children: [
               StreamBuilder<Object>(
@@ -447,11 +473,11 @@ class _DoctorsListState extends State<DoctorsList> {
             ),
         Visibility(
           child: Container(
-            height: 150,
+            height: size.height*0.2,
             padding: const EdgeInsets.only(left: 15, right: 15),
             color: Colors.transparent,
             child: Container(
-                height: 150,
+                height: size.height*0.2,
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -464,59 +490,79 @@ class _DoctorsListState extends State<DoctorsList> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Container(
-                        padding: EdgeInsets.all(6),
-                        color: Colors.grey[200],
-                        height: 70,
-                        width: 350,
-                        child: const AutoSizeText(" ",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w700,
-                          ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.all(6),
+                          color: Colors.grey[200],
+                          height: size.height*0.09,
+                          width: size.width,
+                          child: TextField(
                           textAlign: TextAlign.right,
-                          maxLines: 2,
-                        )
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
-                          },
-                          child: Text(
-                            "הכנת כרטיס תודה",
-                            style: TextStyle(
-                              color: Colors.red[700],
-                              fontSize: 17,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w700,
+                          style: TextStyle(
+                              fontSize: 14,
+                                      fontWeight: FontWeight.w700),
+                          decoration: InputDecoration(
+                              labelText: msg
+                          ),
+                          onChanged: (String value) {
+                            setState(() => msg = value);
+                            },
                             ),
+                      ),
+                      Container(
+                        color: AppColors.mainTeal,
+                        height: size.height*0.03,
+                        child: FlatButton(
+                          color: AppColors.mainTeal,
+                          onPressed: () {
+                            _data.updateMsg(msg, day, hour, email);
+                          },
+                          child:
+                          Text("אישור",
                           ),
                         ),
-                        FlatButton(
-                          onPressed: () {
-                            //navigate to doctors page
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
-                          },
-                          child: const Text(
-                            "צפייה בפרופיל",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 17,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w700,
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
+                              },
+                              child: Text(
+                                "הכנת כרטיס תודה",
+                                style: TextStyle(
+                                  color: Colors.red[700],
+                                  fontSize: 17,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
-                          ),
+                            FlatButton(
+                              onPressed: () {
+                                //navigate to doctors page
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
+                              },
+                              child: const Text(
+                                "צפייה בפרופיל",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 17,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 )
             ),
           ), visible: _isVisible,),

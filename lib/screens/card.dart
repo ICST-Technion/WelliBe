@@ -105,7 +105,7 @@ class _CardSenderState extends State<CardSender> {
       uname = username;
     }
     print(uname + doctor_id);
-    database.uploadFile(png, uname + doctor_id, doctor_id, uname);
+    database.uploadFile(png, uname + doctor_id + DateTime.now().toString(), doctor_id, uname);
     Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPage()));
 
   }

@@ -3,15 +3,20 @@ import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'Register.dart';
 
-class LoginScreen extends StatelessWidget {
-
+class LoginScreen extends StatefulWidget {
   final Function toggleView;
-  LoginScreen({required this.toggleView});
+  String error;
+  LoginScreen({required this.toggleView, this.error = ''});
+  @override
+  _LoginScreen createState() => _LoginScreen(toggleView: this.toggleView, error: this.error);
+}
+class _LoginScreen extends State<LoginScreen> {
+  final Function toggleView;
+  String error;
+  _LoginScreen({required this.toggleView, this.error = ''});
 
   String email = "";
-
   String password = "";
-
   final _formKey = GlobalKey<FormState>();
 
   final AuthService _auth = AuthService();
@@ -67,6 +72,7 @@ class LoginScreen extends StatelessWidget {
                         },
                         onChanged: (val) {
                           email = val;
+                          setState( () => error = '');
                         },
                       ),
                     ),
@@ -96,6 +102,7 @@ class LoginScreen extends StatelessWidget {
                       },
                       onChanged: (val) {
                         password = val;
+                        setState( () => error = '');
                       },
                       obscureText: true,
                     ),
@@ -130,7 +137,7 @@ class LoginScreen extends StatelessWidget {
                           if (_formKey.currentState!.validate()){
                             dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                             if(result==null){
-                              print('could not sign in with credentials');
+                              setState( () => error = 'שם משתמש או סיסמא לא נכונים');
                             }
                           }
                         },
@@ -158,8 +165,14 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    Container(
+                    Text(
+                      error,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.buttonRed
+                      ),
+                    ),                    Container(
                       alignment: Alignment.centerRight,
                       margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                       child: GestureDetector(
@@ -184,4 +197,5 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
 }

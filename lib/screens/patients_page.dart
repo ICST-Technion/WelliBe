@@ -1,11 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-import 'package:wellibe_proj/screens/card.dart';
 
 class PatientOverview extends StatefulWidget {
 
@@ -36,7 +33,9 @@ class _PatientOverviewState extends State<PatientOverview> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        icon: Icon(Icons.arrow_back), onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPage())); },
+                        icon: Icon(Icons.arrow_back), onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPage()));
+                          },
                       ),
                     ),
                     Center(

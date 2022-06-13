@@ -27,6 +27,16 @@ class DatabaseService {
     return ls;
   }
 
+  Future<List> getUsers() async {
+    List ls = [];
+    QuerySnapshot querySnapshot = await usersInfoCollection.get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i].data();
+      ls.add(a);
+    }
+    return ls;
+  }
+
   //adds user to users collection. needs to be called from sign up method.
   Future updateUserData(String url, String name, String email, String password, String role) async {
     return await usersInfoCollection.doc(uid).set({
@@ -56,15 +66,15 @@ class DatabaseService {
     return await usersInfoCollection.doc(uid).update({url : url});
   }
 
-  Future addDoctor(String email) async {
-
-  }
-
-
   //add map of date and doctor id
   Future addMap(int day, int month, int year, String time, String duid) async{
     String date = day.toString() + "-" + month.toString() + "-" + year.toString();
-    return await usersInfoCollection.doc(uid).update({"doctors.$date.$time" : duid });
+    return await usersInfoCollection.doc(uid).update({"doctors.$date.$time" : [duid, ""] });
+  }
+
+  Future updateMsg(String msg, DateTime day, String hour, String email) async{
+    var sday = day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString();
+    return await usersInfoCollection.doc(uid).update({"doctors.$sday.$hour" : [email, msg] });
   }
 
   Stream<List> fromDateToList(int day, int month, int year){
@@ -89,6 +99,7 @@ class DatabaseService {
        return l;
     });
   }
+
 
   Stream<String> getUserNameInner() {
     return usersInfoCollection
@@ -157,7 +168,7 @@ class DatabaseService {
         return doc['role'];
       } else {
         print(doc['role']);
-        return "nothing";
+        return "";
       }
     });
   }
@@ -172,7 +183,7 @@ class DatabaseService {
         return doc['email'];
       } else {
         print(doc['email']);
-        return "nothing";
+        return "";
       }
     });
   }
@@ -193,6 +204,20 @@ class DatabaseService {
       'email' : email,
       'cards' : [],
     });
+  }
+
+  static Future getDoctorsCards(String email) async {
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+    final files = await storage.ref().child("files/" + email + "/").listAll();
+    List<String> urls = [];
+    for(var file in files.items) {
+      await file.getDownloadURL().then((value) {
+        String val = value.toString();
+        urls.add(val);
+      });
+    }
+    return urls;
   }
 
   //return doctors name based on his unique value
@@ -219,7 +244,7 @@ class DatabaseService {
           (doc['position'] as String).isNotEmpty) {
         return doc['position'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -233,7 +258,7 @@ class DatabaseService {
           (doc['speciality'] as String).isNotEmpty) {
         return doc['speciality'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -247,7 +272,7 @@ class DatabaseService {
           (doc['languages'] as String).isNotEmpty) {
         return doc['languages'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -261,7 +286,7 @@ class DatabaseService {
           (doc['additional_info'] as String).isNotEmpty) {
         return doc['additional_info'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -310,6 +335,25 @@ class DatabaseService {
 
 
 
+  Future updateDoctorName(String name, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'name' : name});
+  }
+
+  Future updateDoctorSpeciality(String spec, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'speciality' : spec});
+  }
+
+  Future updateDoctorPos(String pos, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'position' : pos});
+  }
+
+  Future updateDoctorLang(String lan, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'languages' : lan});
+  }
+
+  Future updateDoctorAbout(String about, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'additional_info' : about});
+  }
 
 
   //////////////////////// extras //////////////////////////////
@@ -331,14 +375,14 @@ class DatabaseService {
 
     if (photo == null) return;
     final fileName = (path);
-    final destination = 'files/';
+    final destination = 'files/' + doctor_id + '/';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
           .ref(destination)
           .child(path);
       await ref.putData(photo);
-      var d = {'photo': path, 'username': username};
+      var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
       var l = [d];
       // TODO: change doctor mail to be adaptive
       doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
