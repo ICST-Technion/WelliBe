@@ -21,11 +21,8 @@ class SomethingWentWrong extends StatefulWidget {
 }
 
 class _SomethingWentWrong extends State<SomethingWentWrong> {
-  AuthService _auth = AuthService();
-
   @override
   Widget build(BuildContext context) {
-    DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     return Container(
         color: Colors.transparent,
         child: CircularProgressIndicator(

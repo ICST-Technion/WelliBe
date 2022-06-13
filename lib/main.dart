@@ -1,19 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-//import 'package:intl/date_symbol_data_http_request.dart';
-import 'package:provider/provider.dart';
-//import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:wellibe_proj/screens/home/admin_home.dart';
-import 'package:wellibe_proj/screens/hospitals_view/doctors_grid.dart';
-
 import 'package:wellibe_proj/screens/wrapper.dart';
-import 'package:wellibe_proj/services/auth.dart';
-import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
-import 'package:wellibe_proj/services/database.dart';
-
-import 'assets/wellibe_colors.dart';
 import 'dart:io';
 
 class MyHttpOverrides extends HttpOverrides{
@@ -23,7 +12,6 @@ class MyHttpOverrides extends HttpOverrides{
       ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }
-
 
 void main() async {
   HttpOverrides.global = new MyHttpOverrides();
@@ -51,10 +39,10 @@ class MyApp extends StatelessWidget{
       builder: (context, snapshot) {
         // Check for errors
           if (snapshot.hasError) {
-            return CircularProgressIndicator();
+            return Center(child: SomethingWentWrong());
           }
           else if (!snapshot.hasData){
-            return CircularProgressIndicator();
+            return Center(child: SomethingWentWrong());
           }
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
@@ -63,7 +51,7 @@ class MyApp extends StatelessWidget{
             );
           }
           // Otherwise, show something whilst waiting for initialization to complete
-          return SomethingWentWrong();
+          return Center(child: SomethingWentWrong());
       }
     );
 

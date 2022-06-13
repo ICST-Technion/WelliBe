@@ -107,7 +107,7 @@ class _TestAdminHome extends State<TestAdminHome> {
                                       img = snapshot.data;
                                     }
                                     else{
-                                      return SomethingWentWrong();
+                                      return Center(child: SomethingWentWrong());
                                     }
                                     return GestureDetector(
                                       onTap: (){

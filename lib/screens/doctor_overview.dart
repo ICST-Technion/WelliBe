@@ -16,6 +16,7 @@ class DoctorOverview extends StatefulWidget {
 class _DoctorOverviewState extends State<DoctorOverview> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Material(
@@ -111,7 +112,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                 StreamBuilder<String>(
                                     stream: DatabaseService.getDoctorPosition(widget.email),
                                     builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
+                                      if (snapshot.hasData && snapshot.data!='אין') {
                                         return Text(
                                           snapshot.data!,
                                           style: TextStyle(fontSize: 18,
@@ -148,109 +149,143 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                          Text(
-                              "התחמחות:",
-                            style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: size.height*0.4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  StreamBuilder<String>(
+                                      stream: DatabaseService.getDoctorSpeciality(widget.email),
+                                      builder: (context, snapshot) {
+                                        var _isVis = false;
+                                        var text = "";
+                                        if (snapshot.hasData && snapshot.data!='') {
+                                          _isVis = true;
+                                          text = snapshot.data as String;
+                                        }
+                                        return Visibility(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "התחמחות:",
+                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                text,
+                                                style: TextStyle(fontSize: 18,),
+                                              ),
+                                            ],
+                                          ),
+                                          visible: _isVis,
+                                        );
+                                      }
+                                  ),
+                                  StreamBuilder<String>(
+                                      stream: DatabaseService.getDoctorPosition(widget.email),
+                                      builder: (context, snapshot) {
+                                        var _isVis = false;
+                                        var text = "";
+                                        if (snapshot.hasData && snapshot.data!='') {
+                                          _isVis = true;
+                                          text = snapshot.data as String;
+                                        }
+                                        return Visibility(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "תפקידים:",
+                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                text,
+                                                style: TextStyle(fontSize: 18,),
+                                              ),
+                                            ],
+                                          ),
+                                          visible: _isVis,
+                                        );
+                                      }
+                                  ),
+                                  StreamBuilder<String>(
+                                      stream: DatabaseService.getDoctorLanguages(widget.email),
+                                      builder: (context, snapshot) {
+                                        var _isVis = false;
+                                        var text = "";
+                                        if (snapshot.hasData && snapshot.data!='') {
+                                          _isVis = true;
+                                          text = snapshot.data as String;
+                                        }
+                                        return Visibility(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "שפות:",
+                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                text,
+                                                style: TextStyle(fontSize: 18,),
+                                              ),
+                                            ],
+                                          ),
+                                          visible: _isVis,
+                                        );
+                                      }
+                                  ),
+                                  StreamBuilder<String>(
+                                      stream: DatabaseService.getDoctorAdditional(widget.email),
+                                      builder: (context, snapshot) {
+                                        var _isVis = false;
+                                        var text = "";
+                                        if (snapshot.hasData && snapshot.data!='') {
+                                          _isVis = true;
+                                          text = snapshot.data as String;
+                                        }
+                                        return Visibility(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "על עצמי:",
+                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                text,
+                                                style: TextStyle(fontSize: 18,),
+                                              ),
+                                            ],
+                                          ),
+                                          visible: _isVis,
+                                        );
+                                      }
+                                  ),
+                              ],
+                            ),
                           ),
-                            StreamBuilder<String>(
-                                stream: DatabaseService.getDoctorSpeciality(widget.email),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(
-                                      snapshot.data!,
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                  else {
-                                    return Text(
-                                      " ",
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                }
-                            ),
-                            Spacer(),
-                            Text(
-                              "תפקידים:",
-                              style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            StreamBuilder<String>(
-                                stream: DatabaseService.getDoctorPosition(widget.email),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(
-                                      snapshot.data!,
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                  else {
-                                    return Text(
-                                      " ",
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                }
-                            ),
-                            Spacer(),
-                            Text(
-                              "שפות:",
-                              style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            StreamBuilder<String>(
-                                stream: DatabaseService.getDoctorLanguages(widget.email),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(
-                                      snapshot.data!,
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                  else {
-                                    return Text(
-                                      " ",
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                }
-                            ),
-                            Spacer(),
-
-                            Text(
-                              "על עצמי:",
-                              style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            StreamBuilder<String>(
-                                stream: DatabaseService.getDoctorAdditional(widget.email),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(
-                                      snapshot.data!,
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                  else {
-                                    return Text(
-                                      " ",
-                                      style: TextStyle(fontSize: 18),
-                                    );
-                                  }
-                                }
-                            ),
-                            Spacer(),
-                      ElevatedButton(
-                              child: Text(
-                                "הכנת כרטיס הוקרת תודה",
-                                style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              style: ButtonStyle(
+                          Expanded(
+                            child: Center(
+                              child: ElevatedButton(
+                                child: Text(
+                                  "הכנת כרטיס הוקרת תודה",
+                                  style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                                style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(Colors.indigo.shade900),
                                   padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
-                                  ), onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));
-                                  },
-                        )],
+                                ), onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));
+                              },
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),

@@ -168,7 +168,7 @@ class DatabaseService {
         return doc['role'];
       } else {
         print(doc['role']);
-        return "nothing";
+        return "";
       }
     });
   }
@@ -183,7 +183,7 @@ class DatabaseService {
         return doc['email'];
       } else {
         print(doc['email']);
-        return "nothing";
+        return "";
       }
     });
   }
@@ -244,7 +244,7 @@ class DatabaseService {
           (doc['position'] as String).isNotEmpty) {
         return doc['position'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -258,7 +258,7 @@ class DatabaseService {
           (doc['speciality'] as String).isNotEmpty) {
         return doc['speciality'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -272,7 +272,7 @@ class DatabaseService {
           (doc['languages'] as String).isNotEmpty) {
         return doc['languages'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -286,7 +286,7 @@ class DatabaseService {
           (doc['additional_info'] as String).isNotEmpty) {
         return doc['additional_info'];
       } else {
-        return 'אין';
+        return '';
       }
     });
   }
@@ -335,6 +335,25 @@ class DatabaseService {
 
 
 
+  Future updateDoctorName(String name, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'name' : name});
+  }
+
+  Future updateDoctorSpeciality(String spec, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'speciality' : spec});
+  }
+
+  Future updateDoctorPos(String pos, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'position' : pos});
+  }
+
+  Future updateDoctorLang(String lan, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'languages' : lan});
+  }
+
+  Future updateDoctorAbout(String about, String email) async{
+    return await doctorsInfoCollection.doc(email).update({'additional_info' : about});
+  }
 
 
   //////////////////////// extras //////////////////////////////

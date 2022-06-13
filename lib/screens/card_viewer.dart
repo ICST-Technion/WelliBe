@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:galleryimage/galleryimage.dart';
+import 'package:wellibe_proj/screens/edit_doctor_overview.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 
 import 'package:wellibe_proj/services/database.dart';
@@ -8,8 +9,6 @@ import '../assets/wellibe_colors.dart';
 import '../services/auth.dart';
 
 final AuthService _auth = AuthService();
-DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
-
 class CardViewer extends StatefulWidget {
   final String email;
   const CardViewer({required this.email});
@@ -114,27 +113,41 @@ class _CardViewerState extends State<CardViewer> {
                         Padding(padding: EdgeInsets.all(5)),
                         Align(
                             alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: StreamBuilder<String>(
-                                  stream: _data.getUrlInner(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      img = snapshot.data;
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor: Colors.black,
-                                        child: CircleAvatar(
-                                          radius: 45,
-                                          backgroundImage: NetworkImage(img!),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                              ),
+                            child: StreamBuilder<Object>(
+                              stream: _data.getEmailInner(),
+                              builder: (context, snapshot) {
+                                var email;
+                                if(snapshot.hasData) {
+                                  email = snapshot.data;
+                                  return Container(
+                                    padding: const EdgeInsets.only(right: 15),
+                                    child: StreamBuilder<String>(
+                                        stream: _data.getUrlInner(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            img = snapshot.data;
+                                          }
+                                          return Padding(
+                                            padding: const EdgeInsets.all(
+                                                8.0),
+                                            child: CircleAvatar(
+                                              radius: 50,
+                                              backgroundColor: Colors.black,
+                                              child: CircleAvatar(
+                                                radius: 45,
+                                                backgroundImage: NetworkImage(
+                                                    img!),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  );
+                                }
+                                else{
+                                  return SomethingWentWrong();
+                                }
+                              }
                             )
                         ),
                       ]
