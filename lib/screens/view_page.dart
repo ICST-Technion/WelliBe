@@ -278,7 +278,7 @@ class _TestPageState extends State<TestPage> {
                 child: Align(
                   child:  Tooltip(
                     showDuration: const Duration(seconds: 2),
-                    waitDuration: const Duration(seconds: 1),
+                    //waitDuration: const Duration(seconds: 1),
                     message: 'לחץ ארוך על סמלים להצגת מידע',
                     child: const Icon(Icons.help, color: Colors.black,),
                   ),
