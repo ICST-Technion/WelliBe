@@ -220,6 +220,11 @@ class DatabaseService {
     return urls;
   }
 
+  static Future deleteDoctorCard(String url) async {
+    await firebase_storage.FirebaseStorage.instance.refFromURL(url).delete();
+    return 0;
+  }
+
   //return doctors name based on his unique value
   static Stream<String> getDoctorNameInner(String email) {
     return FirebaseFirestore.instance.collection('doctorsInfo')

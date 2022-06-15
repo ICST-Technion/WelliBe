@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:galleryimage/galleryimage.dart';
 import 'package:wellibe_proj/screens/edit_doctor_overview.dart';
@@ -163,9 +162,56 @@ class _CardViewerState extends State<CardViewer> {
                           if (snapshot.hasData) {
                             var urls = snapshot.data as List<String>;
                             print(urls);
-                            return GalleryImage(
-                              imageUrls: urls,
-                              numOfShowImages: urls.length,
+                            return GridView.builder(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 0,
+                                mainAxisSpacing: 0,
+                                crossAxisCount: 3,
+                              ),
+                              itemCount: urls.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return new Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 16.0,
+                                    horizontal: 8.0,
+                                  ),
+                                  child: Material(
+                                    elevation: 5.0,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                              return ImageScreen(urls[index]);
+                                            }));
+                                          },
+                                          child: Hero(
+                                            tag: urls[index],
+                                            child: Image.network(
+                                              urls[index],
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                            child: OutlinedButton(
+                                                onPressed: () async {
+                                                  await DatabaseService
+                                                      .deleteDoctorCard(
+                                                      urls[index]);
+                                                  setState(() {});
+                                                },
+                                                child: Icon(Icons.delete)
+                                            ),
+                                            left: 0,
+                                            top: 0,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                );
+                              }
                             );
                           }
                           else {
@@ -176,6 +222,36 @@ class _CardViewerState extends State<CardViewer> {
                 )
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImageScreen extends StatelessWidget {
+  var url;
+  ImageScreen(String this.url);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        backgroundColor: AppColors.mainTeal,
+      ),
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Center(
+          child: Hero(
+            tag: this.url,
+            child: Image.network(
+              this.url,
+            ),
+          ),
         ),
       ),
     );
