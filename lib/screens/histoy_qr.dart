@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
@@ -48,8 +50,10 @@ class _HomeState extends State<Home> {
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
-                          child: FlatButton.icon(
-                            padding: const EdgeInsets.only(top: 40),
+                          child: TextButton.icon(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.only(top: 40),
+                            ),
                             icon: const Icon(Icons.person),
                             label: const Text('logout'),
                             onPressed: () async {
@@ -74,12 +78,11 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 180),
-                    child: FlatButton(
+                    child: TextButton(
                       child: const Text(
                         'History',
-                        style: TextStyle(fontSize: 40.0),
+                        style: TextStyle(fontSize: 40.0, color: Colors.black),
                       ),
-                      textColor: Colors.black,
                       onPressed: () {
                         //_auth.getCurrentUser()?.updatePhotoURL('https://www.shareicon.net/data/128x128/2015/09/24/106425_man_512x512.png');
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPage()));
@@ -99,12 +102,11 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                     margin: const EdgeInsets.all(90),
-                    child: FlatButton(
+                    child: TextButton(
                       child: const Text(
                         'QR',
-                        style: TextStyle(fontSize: 40.0),
+                        style: TextStyle(fontSize: 40.0, color:Colors.black),
                       ),
-                      textColor: Colors.black,
                       onPressed: () {
                         //navigate to shakeds qr page
 

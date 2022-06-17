@@ -389,7 +389,7 @@ class DatabaseService {
       await ref.putData(photo);
       var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
       var l = [d];
-      // TODO: change doctor mail to be adaptive
+
       doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
 
     } catch (e) {

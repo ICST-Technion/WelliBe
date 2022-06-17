@@ -84,7 +84,7 @@ class _TestPageState extends State<TestPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();
@@ -461,7 +461,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         else{
                           return SomethingWentWrong();
                         }
-                        return FlatButton(
+                        return TextButton(
                             onPressed: showToast,
                             child: demoDoctorsToDate(url, name, pos, hour, context)
                         );
@@ -515,8 +515,11 @@ class _DoctorsListState extends State<DoctorsList> {
                       Container(
                         color: AppColors.mainTeal,
                         height: size.height*0.03,
-                        child: FlatButton(
-                          color: AppColors.mainTeal,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            primary:AppColors.mainTeal,
+                          ),
+
                           onPressed: () {
                             _data.updateMsg(msg, day, hour, email);
                           },
@@ -529,7 +532,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
                               },
@@ -543,7 +546,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                 ),
                               ),
                             ),
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 //navigate to doctors page
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
