@@ -226,8 +226,7 @@ class DRegisterScreen extends StatelessWidget {
 
                                 dynamic result = await _auth.doctorRegisterWithEmailAndPassword(firstName+" "+familyName, email, password, positionName, speciality);
 
-                                _auth.signInWithEmailAndPassword("hospital@gmail.com",
-                                    "admin100"); // should fix  for security
+                             
 
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => AdminHome()));
                               }

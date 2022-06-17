@@ -1,5 +1,6 @@
 //firebase authentication backend communication
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/models/user.dart';
@@ -63,8 +64,11 @@ class AuthService {
 
   Future doctorRegisterWithEmailAndPassword(String name, String email, String password, String position, String speciality) async {
     try{
-
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseApp app = await Firebase.initializeApp(
+          name: 'Secondary', options: Firebase.app().options);
+      UserCredential result = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+      //UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? new_user = result.user;
       //create a new document for the user with the uid
       await DatabaseService(uid: new_user?.uid).updateDoctorData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, speciality, position, '', '', email);
