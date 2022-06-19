@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
