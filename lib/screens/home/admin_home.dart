@@ -42,7 +42,7 @@ class _TestAdminHome extends State<TestAdminHome> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();

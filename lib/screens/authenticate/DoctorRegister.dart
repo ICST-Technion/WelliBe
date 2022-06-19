@@ -61,13 +61,13 @@ class DRegisterScreen extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.center,
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                                labelText: "שם פרטי"
-                            ),
-                            validator: (val) {
-                              if(val==null || val.trim().isEmpty){
+    margin: EdgeInsets.symmetric(horizontal: 40),
+    child: TextFormField(
+    decoration: InputDecoration(
+    labelText: "שם פרטי"
+    ),
+    validator: (val) {
+    if(val==null || val.trim().isEmpty){
                                 return 'הכנס שם פרטי';
                               }
                               if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
@@ -226,7 +226,7 @@ class DRegisterScreen extends StatelessWidget {
 
                                 dynamic result = await _auth.doctorRegisterWithEmailAndPassword(firstName+" "+familyName, email, password, positionName, speciality);
 
-                             
+
 
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => AdminHome()));
                               }

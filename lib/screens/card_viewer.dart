@@ -33,7 +33,7 @@ class _CardViewerState extends State<CardViewer> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: const Text('התנתק',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {

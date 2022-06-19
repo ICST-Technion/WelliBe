@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -48,7 +49,9 @@ class DatabaseService {
       'role' : role,
   });
   }
-
+  Future updateUserProfilePhoto(String loc) async {
+    return await usersInfoCollection.doc(uid).update({'url': loc});
+  }
 
   Future updateUserName(String name) async{
     return await usersInfoCollection.doc(uid).update({'name' : name});
@@ -142,6 +145,15 @@ class DatabaseService {
       }
     });
   }
+  Future<Uint8List?> getProfileImage(String name){
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+    final ref = storage
+        .ref('profile/')
+        .child(name);
+    var pngBytes = ref.getData();
+    return pngBytes;
+  }
 
   Stream<String> getUrlInner() {
     return usersInfoCollection
@@ -150,7 +162,12 @@ class DatabaseService {
         .map((doc) {
       if (doc['url'] is String &&
           (doc['url'] as String).isNotEmpty) {
-        return doc['url'];
+        if(doc['url'].contains('http')) {
+          return doc['url'];
+        }
+        else{
+          return "";
+        }
       } else {
         return 'https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg';
       }
@@ -389,7 +406,7 @@ class DatabaseService {
       await ref.putData(photo);
       var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
       var l = [d];
-      // TODO: change doctor mail to be adaptive
+
       doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
 
     } catch (e) {
