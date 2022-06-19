@@ -1,6 +1,4 @@
 ﻿// ignore: import_of_legacy_library_into_null_safe
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -37,14 +35,11 @@ class TestPage extends StatefulWidget {
   _TestPageState createState() => _TestPageState();
 }
 
-
 class _TestPageState extends State<TestPage> {
   final _key = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  int a = 0;
-  Uint8List _image = Uint8List(0);
-  
+
   //List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(List docs, DateTime day){
     List<DoctorsList> doctorsList = [];
@@ -73,21 +68,7 @@ class _TestPageState extends State<TestPage> {
       );
     }
   }
-  void load(){
-    if(a < 2){
-      a += 1;
-      setState(() {});
-      print('reloaded');
-    }
-  }
-  String getmail(){
-    String s = "";
-    if(_auth.getCurrentUser()!.email != null) {
-      s = _auth.getCurrentUser()!.email!;
-    }
-    return s;
-  }
-  
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -103,7 +84,7 @@ class _TestPageState extends State<TestPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
+            FlatButton(
               child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();
@@ -200,29 +181,6 @@ class _TestPageState extends State<TestPage> {
                                 }
                                 else{
                                   return SomethingWentWrong();
-                                }
-                                if(!snapshot.data!.contains('http'))
-                                {
-                                  var bytes = _data.getProfileImage(getmail());
-                                  bytes.then((value) => _image=value!);
-                                  var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
-
-                                  return GestureDetector(
-                                    onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor: Colors.black,
-                                        child: CircleAvatar(
-                                          radius: 45,
-                                          backgroundImage: MemoryImage(_image),
-                                        ),
-                                      ),
-                                    ),
-                                  );
                                 }
                                 return GestureDetector(
                                   onTap: (){
@@ -517,7 +475,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         else{
                           return SomethingWentWrong();
                         }
-                        return TextButton(
+                        return FlatButton(
                             onPressed: showToast,
                             child: demoDoctorsToDate(url, name, pos, hour, context)
                         );
@@ -571,11 +529,8 @@ class _DoctorsListState extends State<DoctorsList> {
                       Container(
                         color: AppColors.mainTeal,
                         height: size.height*0.03,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            primary:AppColors.mainTeal,
-                          ),
-
+                        child: FlatButton(
+                          color: AppColors.mainTeal,
                           onPressed: () {
                             _data.updateMsg(msg, day, hour, email);
                           },
@@ -588,7 +543,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
+                            FlatButton(
                               onPressed: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
                               },
@@ -602,7 +557,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                 ),
                               ),
                             ),
-                            TextButton(
+                            FlatButton(
                               onPressed: () {
                                 //navigate to doctors page
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
@@ -610,7 +565,7 @@ class _DoctorsListState extends State<DoctorsList> {
                               child: Text(
                                 "צפייה בפרופיל",
                                 style: TextStyle(
-                                  color: Colors.grey.shade800,
+                                  color: Colors.grey.shade900,
                                   fontSize: 17,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.w700,
