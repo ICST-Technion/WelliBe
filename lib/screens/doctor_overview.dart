@@ -37,7 +37,9 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 16, 16, 0),
                           child: IconButton(
-                            icon: Icon(Icons.arrow_back), onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPage())); },
+                            icon: Icon(Icons.arrow_back), onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPage()));
+                              },
                           ),
                         ),
                       ),
@@ -155,7 +157,7 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                           Container(
                             height: size.height*0.4,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   StreamBuilder<String>(

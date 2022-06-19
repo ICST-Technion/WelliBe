@@ -36,6 +36,7 @@ class _TestAdminHome extends State<TestAdminHome> {
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: AppColors.mainTeal,
         elevation: 0,
@@ -114,7 +115,6 @@ class _TestAdminHome extends State<TestAdminHome> {
                                     }
                                     return GestureDetector(
                                       onTap: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorsGrid()));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),

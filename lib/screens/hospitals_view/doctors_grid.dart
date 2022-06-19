@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
+import 'package:wellibe_proj/screens/doctor_overview.dart';
 import 'package:wellibe_proj/screens/home/admin_home.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/services/auth.dart';
@@ -23,7 +24,6 @@ class _DoctorsGridState extends State<DoctorsGrid> {
   final Future<List> dlist = DatabaseService(uid: _auth.getCurrentUser()?.uid).getDocs();
   @override
   Widget build(BuildContext context) {
-    DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Material(
@@ -94,7 +94,7 @@ class _DoctorsGridState extends State<DoctorsGrid> {
                             },
                           ));
                     }
-                    return SomethingWentWrong();
+                    return Center(child: SomethingWentWrong());
                   },
                 ),
               ),

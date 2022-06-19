@@ -71,7 +71,7 @@ class _TestPageState extends State<TestPage> {
   
   @override
   Widget build(BuildContext context) {
-
+    Size size = MediaQuery.of(context).size;
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
@@ -188,6 +188,24 @@ class _TestPageState extends State<TestPage> {
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
+                                    // child: Container(
+                                    //   width: size.width*0.1,
+                                    //   height: size.width*0.1,
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.black, // border color
+                                    //     shape: BoxShape.circle,
+                                    //   ),
+                                    //   child: Padding(
+                                    //     padding: EdgeInsets.all(2), // border width
+                                    //     child: Container( // or ClipRRect if you need to clip the content
+                                    //       decoration: BoxDecoration(
+                                    //         shape: BoxShape.circle,
+                                    //         color: Colors.blue, // inner circle color
+                                    //       ),
+                                    //       child: Image.network(img!), // inner content
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     child: CircleAvatar(
                                       radius: 50,
                                       backgroundColor: Colors.black,
@@ -253,11 +271,8 @@ class _TestPageState extends State<TestPage> {
                     stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
                     builder: (context, snapshot) {
                       if(snapshot.hasData){
-                        //print(snapshot.data);
                         List l = snapshot.data as List;
-                        //print(l);
                         return ListView(
-                          //children: buildList(DateTime.now()),
                           children: buildList(l, _selectedDay),
                         );
                       }
@@ -270,7 +285,6 @@ class _TestPageState extends State<TestPage> {
                       }
                     }
                   ),
-                  //alignment: Alignment.topRight,
                 )
             ),
             BottomAppBar(
@@ -548,10 +562,10 @@ class _DoctorsListState extends State<DoctorsList> {
                                 //navigate to doctors page
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));
                               },
-                              child: const Text(
+                              child: Text(
                                 "צפייה בפרופיל",
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: Colors.grey.shade800,
                                   fontSize: 17,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.w700,

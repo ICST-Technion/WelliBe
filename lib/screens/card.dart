@@ -6,6 +6,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
 
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/database.dart';
@@ -120,6 +121,7 @@ class _CardSenderState extends State<CardSender> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         backgroundColor: Colors.white,
@@ -129,7 +131,7 @@ class _CardSenderState extends State<CardSender> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                icon: Icon(Icons.arrow_forward, color: Colors.black),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -138,7 +140,7 @@ class _CardSenderState extends State<CardSender> {
           ],
         leading: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.redAccent,
+            primary: AppColors.buttonBlue,
             onPrimary: Colors.white,
             shadowColor: Colors.greenAccent,
             elevation: 3,

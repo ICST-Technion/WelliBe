@@ -2,29 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:galleryimage/galleryimage.dart';
 import 'package:wellibe_proj/screens/edit_doctor_overview.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
-
 import 'package:wellibe_proj/services/database.dart';
 import '../assets/wellibe_colors.dart';
 import '../services/auth.dart';
 
+
 final AuthService _auth = AuthService();
-class CardViewer extends StatefulWidget {
+class CardViewer extends StatelessWidget {
   final String email;
-  const CardViewer({required this.email});
-
-  @override
-  State<CardViewer> createState() => _CardViewerState();
-}
-
-class _CardViewerState extends State<CardViewer> {
+  const CardViewer({Key? key, required this.email}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
-    DatabaseService _data = DatabaseService(uid: _auth
-        .getCurrentUser()
-        ?.uid);
+    return MaterialApp(
+      home: TestCardViewer(email: this.email),
+    );
+  }
+}
+
+class TestCardViewer extends StatefulWidget {
+  final String email;
+  const TestCardViewer({required this.email});
+
+  @override
+  State<TestCardViewer> createState() => _CardViewerState();
+}
+
+class _CardViewerState extends State<TestCardViewer> {
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     return Scaffold(
       appBar: AppBar(
@@ -34,8 +41,7 @@ class _CardViewerState extends State<CardViewer> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FlatButton(
-              child: const Text('התנתק',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();
                 print("sign out");
@@ -49,13 +55,11 @@ class _CardViewerState extends State<CardViewer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: <Widget> [
             Container(
               height: size.height * 0.2,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(9),
-                      bottomRight: Radius.circular(9)),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(9), bottomRight: Radius.circular(9)),
                   color: AppColors.mainTeal
               ),
               child: Column(
@@ -76,9 +80,7 @@ class _CardViewerState extends State<CardViewer> {
                                 ),
                                 Text(
                                   'שלום,',
-                                  style: TextStyle(
-                                      fontSize: 20.0, color: Colors.black),
-                                  //Colors.indigo.shade900),
+                                  style: TextStyle(fontSize: 20.0, color: Colors.black), //Colors.indigo.shade900),
                                   textAlign: TextAlign.justify,
                                   textDirection: TextDirection.rtl,
                                 ),
@@ -97,7 +99,6 @@ class _CardViewerState extends State<CardViewer> {
                                         style: TextStyle(fontSize: 20.0,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black),
-                                        //Colors.indigo.shade900),
                                         textAlign: TextAlign.justify,
                                         textDirection: TextDirection.rtl,
                                       );
@@ -111,42 +112,36 @@ class _CardViewerState extends State<CardViewer> {
                         ),
                         Padding(padding: EdgeInsets.all(5)),
                         Align(
-                            alignment: Alignment.centerRight,
-                            child: StreamBuilder<Object>(
-                              stream: _data.getEmailInner(),
-                              builder: (context, snapshot) {
-                                var email;
-                                if(snapshot.hasData) {
-                                  email = snapshot.data;
-                                  return Container(
-                                    padding: const EdgeInsets.only(right: 15),
-                                    child: StreamBuilder<String>(
-                                        stream: _data.getUrlInner(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            img = snapshot.data;
-                                          }
-                                          return Padding(
-                                            padding: const EdgeInsets.all(
-                                                8.0),
-                                            child: CircleAvatar(
-                                              radius: 50,
-                                              backgroundColor: Colors.black,
-                                              child: CircleAvatar(
-                                                radius: 45,
-                                                backgroundImage: NetworkImage(
-                                                    img!),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                    ),
-                                  );
-                                }
-                                else{
-                                  return SomethingWentWrong();
-                                }
-                              }
+                            alignment: Alignment.center,
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: StreamBuilder<String>(
+                                  stream: _data.getUrlInner(),
+                                  builder: (context, snapshot) {
+                                    if(snapshot.hasData) {
+                                      img = snapshot.data;
+                                    }
+                                    else{
+                                      return Center(child: SomethingWentWrong());
+                                    }
+                                    return GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctorOverview(email: widget.email)));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundColor: Colors.black,
+                                          child: CircleAvatar(
+                                            radius: 45,
+                                            backgroundImage: NetworkImage(img!),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              ),
                             )
                         ),
                       ]
@@ -154,8 +149,10 @@ class _CardViewerState extends State<CardViewer> {
                 ],
               ),
             ),
-            Expanded(
+            Expanded (
                 child: Container(
+                  padding: EdgeInsets.all(20),
+                  color: Colors.white,
                     child: FutureBuilder(
                         future: DatabaseService.getDoctorsCards(widget.email),
                         builder: (context, snapshot) {
@@ -215,7 +212,7 @@ class _CardViewerState extends State<CardViewer> {
                             );
                           }
                           else {
-                            return Center(child: CircularProgressIndicator(),);
+                            return Center(child: SomethingWentWrong(),);
                           }
                         }
                     )

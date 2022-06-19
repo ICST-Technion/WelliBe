@@ -2,12 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/home/admin_home.dart';
-import 'package:wellibe_proj/screens/patients_page.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
-import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-import 'hospital_doctor_overview.dart';
 
 List removeDocs(List arr){
   print(arr);
@@ -106,7 +103,7 @@ class _PatientsGridState extends State<PatientsGrid> {
                               },
                             ));
                       }
-                      return SomethingWentWrong();
+                      return Center(child: SomethingWentWrong());
                     },
                   ),
                 ),
