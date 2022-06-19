@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:galleryimage/galleryimage.dart';
 import 'package:wellibe_proj/screens/edit_doctor_overview.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
+
 import 'package:wellibe_proj/services/database.dart';
 import '../assets/wellibe_colors.dart';
 import '../services/auth.dart';
-
 
 final AuthService _auth = AuthService();
 class CardViewer extends StatelessWidget {
@@ -55,7 +55,7 @@ class _CardViewerState extends State<TestCardViewer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget> [
+          children: <Widget>[
             Container(
               height: size.height * 0.2,
               decoration: BoxDecoration(
@@ -80,7 +80,9 @@ class _CardViewerState extends State<TestCardViewer> {
                                 ),
                                 Text(
                                   'שלום,',
-                                  style: TextStyle(fontSize: 20.0, color: Colors.black), //Colors.indigo.shade900),
+                                  style: TextStyle(
+                                      fontSize: 20.0, color: Colors.black),
+                                  //Colors.indigo.shade900),
                                   textAlign: TextAlign.justify,
                                   textDirection: TextDirection.rtl,
                                 ),
@@ -99,6 +101,7 @@ class _CardViewerState extends State<TestCardViewer> {
                                         style: TextStyle(fontSize: 20.0,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black),
+                                        //Colors.indigo.shade900),
                                         textAlign: TextAlign.justify,
                                         textDirection: TextDirection.rtl,
                                       );
@@ -112,36 +115,42 @@ class _CardViewerState extends State<TestCardViewer> {
                         ),
                         Padding(padding: EdgeInsets.all(5)),
                         Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: StreamBuilder<String>(
-                                  stream: _data.getUrlInner(),
-                                  builder: (context, snapshot) {
-                                    if(snapshot.hasData) {
-                                      img = snapshot.data;
-                                    }
-                                    else{
-                                      return Center(child: SomethingWentWrong());
-                                    }
-                                    return GestureDetector(
-                                      onTap: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctorOverview(email: widget.email)));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          backgroundColor: Colors.black,
-                                          child: CircleAvatar(
-                                            radius: 45,
-                                            backgroundImage: NetworkImage(img!),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                              ),
+                            alignment: Alignment.centerRight,
+                            child: StreamBuilder<Object>(
+                              stream: _data.getEmailInner(),
+                              builder: (context, snapshot) {
+                                var email;
+                                if(snapshot.hasData) {
+                                  email = snapshot.data;
+                                  return Container(
+                                    padding: const EdgeInsets.only(right: 15),
+                                    child: StreamBuilder<String>(
+                                        stream: _data.getUrlInner(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            img = snapshot.data;
+                                          }
+                                          return Padding(
+                                            padding: const EdgeInsets.all(
+                                                8.0),
+                                            child: CircleAvatar(
+                                              radius: 50,
+                                              backgroundColor: Colors.black,
+                                              child: CircleAvatar(
+                                                radius: 45,
+                                                backgroundImage: NetworkImage(
+                                                    img!),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  );
+                                }
+                                else{
+                                  return SomethingWentWrong();
+                                }
+                              }
                             )
                         ),
                       ]
