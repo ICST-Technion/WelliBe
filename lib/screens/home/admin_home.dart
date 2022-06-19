@@ -44,7 +44,7 @@ class _TestAdminHome extends State<TestAdminHome> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
-              child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
               onPressed: () async {
                 await _auth.signOut();
                 print("sign out");

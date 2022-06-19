@@ -130,16 +130,21 @@ class _CardViewerState extends State<TestCardViewer> {
                                           if (snapshot.hasData) {
                                             img = snapshot.data;
                                           }
-                                          return Padding(
-                                            padding: const EdgeInsets.all(
-                                                8.0),
-                                            child: CircleAvatar(
-                                              radius: 50,
-                                              backgroundColor: Colors.black,
+                                          return GestureDetector(
+                                            onTap: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctorOverview(email: email)));
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                  8.0),
                                               child: CircleAvatar(
-                                                radius: 45,
-                                                backgroundImage: NetworkImage(
-                                                    img!),
+                                                radius: 50,
+                                                backgroundColor: Colors.black,
+                                                child: CircleAvatar(
+                                                  radius: 45,
+                                                  backgroundImage: NetworkImage(
+                                                      img!),
+                                                ),
                                               ),
                                             ),
                                           );

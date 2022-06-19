@@ -188,24 +188,6 @@ class _TestPageState extends State<TestPage> {
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    // child: Container(
-                                    //   width: size.width*0.1,
-                                    //   height: size.width*0.1,
-                                    //   decoration: BoxDecoration(
-                                    //     color: Colors.black, // border color
-                                    //     shape: BoxShape.circle,
-                                    //   ),
-                                    //   child: Padding(
-                                    //     padding: EdgeInsets.all(2), // border width
-                                    //     child: Container( // or ClipRRect if you need to clip the content
-                                    //       decoration: BoxDecoration(
-                                    //         shape: BoxShape.circle,
-                                    //         color: Colors.blue, // inner circle color
-                                    //       ),
-                                    //       child: Image.network(img!), // inner content
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     child: CircleAvatar(
                                       radius: 50,
                                       backgroundColor: Colors.black,
