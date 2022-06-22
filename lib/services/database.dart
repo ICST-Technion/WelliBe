@@ -5,13 +5,18 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/services/auth.dart';
-
+// import mockito and create new file to tests
+// mock class extends Mock implements FirebaseAuth Firestore and new subclass DB, DB uses required for AuthService and Firestore (to be mocked and supplied as parameters)
+// Then create tests that 
 class DatabaseService {
   final String? uid;
   DatabaseService({required this.uid});
   AuthService _auth = AuthService();
   //creates users collection in firebase
-  final CollectionReference usersInfoCollection = FirebaseFirestore.instance.collection(
+  final CollectionReference usersInfoCollection;
+  
+  DatabaseService({required this.usersInfoCollection});
+  //FirebaseFirestore.instance.collection(
       'usersInfo');
   final CollectionReference doctorsInfoCollection = FirebaseFirestore.instance.collection('doctorsInfo');
 
