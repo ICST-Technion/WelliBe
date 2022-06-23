@@ -28,10 +28,9 @@ class DatabaseService {
     this.db = createDB(this.uid, _auth, usersInfoCollection, doctorsInfoCollection);
   }
 
-
   DB createDB(String? uid, AuthService _auth,
       CollectionReference usersInfoCollection, CollectionReference doctorsInfoCollection){
-    return DB(_auth, usersInfoCollection, doctorsInfoCollection, uid: uid);
+    return DB(usersInfoCollection, doctorsInfoCollection, uid: uid);
   }
 
   /////////////////////////////// users functions ////////////////////////////
@@ -110,7 +109,6 @@ class DatabaseService {
 
   Future updateDoctorAbout(String about, String email) async{return db!.updateDoctorAbout(about, email);}
 
-
   //////////////////////// extras //////////////////////////////
 
   //snapshot of change in collection
@@ -120,8 +118,6 @@ class DatabaseService {
   QuerySnapshot get user1 {
     return usersInfoCollection.snapshots() as QuerySnapshot;
   }
-
-
 
   Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
     // doctor_id is doctor's email
@@ -146,21 +142,15 @@ class DatabaseService {
       print('error occured');
     }
   }
-
-  
-  
-  
-
 }
-class DB{
+
+class DB {
   final String? uid;
-  final AuthService _auth;
   final CollectionReference usersInfoCollection; 
   final CollectionReference doctorsInfoCollection;
 
-  DB(this._auth, this.usersInfoCollection, this.doctorsInfoCollection, {required this.uid});
+  DB(this.usersInfoCollection, this.doctorsInfoCollection, {required this.uid});
 
-  
   /////////////////////////////// users functions ////////////////////////////
   Future<List> getDocs() async {
     List ls = [];
@@ -191,8 +181,9 @@ class DB{
       'name' : name,
       'doctors' : " ",
       'role' : role,
-  });
+    });
   }
+
   Future updateUserProfilePhoto(String loc) async {
     return await usersInfoCollection.doc(uid).update({'url': loc});
   }
@@ -221,7 +212,6 @@ class DB{
 
   Future updateMsg(String msg, DateTime day, String hour, String email) async{
     var sday = day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString();
-    print("yeS");
     return await usersInfoCollection.doc(uid).update({"doctors.$sday.$hour" : [email, msg] });
   }
 
@@ -500,8 +490,6 @@ class DB{
     });
   }
 
-
-
   Future updateDoctorName(String name, String email) async{
     return await doctorsInfoCollection.doc(email).update({'name' : name});
   }
@@ -521,9 +509,4 @@ class DB{
   Future updateDoctorAbout(String about, String email) async{
     return await doctorsInfoCollection.doc(email).update({'additional_info' : about});
   }
-
-
-  
-
-
 }
