@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
@@ -63,7 +64,7 @@ class MAuth extends Mock implements FirebaseAuth {
 }
 
 void main() async {
-  final fakeFirestore = FakeFirebaseFirestore();
+  var fakeFirestore = FakeFirebaseFirestore();
   final mockUsersInfo = fakeFirestore.collection('usersInfo');
   final mockDoctorsInfo = fakeFirestore.collection('doctorsInfo');
   MAuth mockAuth = MAuth();
@@ -120,14 +121,93 @@ void main() async {
     final userUid = "user@gmail.com" + "123456";
     DB mockDB = DB(mockUsersInfo, mockDoctorsInfo, uid: userUid);
 
-    test("update profile picture", () async {
-      await mockDB.updateUserProfilePhoto('new_profile_picture');
-      expect(
-          (await mockUsersInfo.doc(userUid).get())['url'],
-        'new_profile_picture'
-      );
+    group("user tests", () {
+      test("update details", () async {
+        await mockDB.updateUserProfilePhoto('new_profile_picture');
+        expect(
+            (await mockUsersInfo.doc(userUid).get())['url'],
+            'new_profile_picture'
+        );
+
+        await mockDB.updateUserGender('new_gender');
+        expect(
+            (await mockUsersInfo.doc(userUid).get())['gender'],
+            'new_gender'
+        );
+
+        await mockDB.updateUserName("new_name");
+        expect(
+            (await mockUsersInfo.doc(userUid).get())['name'],
+            'new_name'
+        );
+
+        await mockDB.updateUserAge("22");
+        expect(
+            (await mockUsersInfo.doc(userUid).get())['age'],
+            '22'
+        );
+      });
+
+      test("get all users", () async {
+        List ls = [];
+        QuerySnapshot querySnapshot = await mockUsersInfo.get();
+        for (int i = 0; i < querySnapshot.docs.length; i++) {
+          var a = querySnapshot.docs[i].data();
+          ls.add(a);
+        }
+        expect(
+          await mockDB.getUsers(),
+          ls
+        );
+      });
     });
 
+    group("doctor tests", () {
+      String doctorEmail = "doctor@gmail.com";
+      test("update details", () async {
+        await mockDB.updateDoctorName('new_doctor_name', doctorEmail);
+        expect(
+            (await mockDoctorsInfo.doc(doctorEmail).get())['name'],
+            'new_doctor_name'
+        );
 
+        await mockDB.updateDoctorAbout('new_about', doctorEmail);
+        expect(
+            (await mockDoctorsInfo.doc(doctorEmail).get())['additional_info'],
+            'new_about'
+        );
+
+        await mockDB.updateDoctorLang('new_languages', doctorEmail);
+        expect(
+            (await mockDoctorsInfo.doc(doctorEmail).get())['languages'],
+            'new_languages'
+        );
+
+        await mockDB.updateDoctorPos('new_position', doctorEmail);
+        expect(
+            (await mockDoctorsInfo.doc(doctorEmail).get())['position'],
+            'new_position'
+        );
+
+        await mockDB.updateDoctorSpeciality('new_speciality', doctorEmail);
+        expect(
+            (await mockDoctorsInfo.doc(doctorEmail).get())['speciality'],
+            'new_speciality'
+        );
+      });
+
+      test("get all doctors", () async {
+        List ls = [];
+        QuerySnapshot querySnapshot = await mockDoctorsInfo.get();
+        for (int i = 0; i < querySnapshot.docs.length; i++) {
+          var a = querySnapshot.docs[i].data();
+          ls.add(a);
+        }
+        expect(
+            await mockDB.getDocs(),
+            ls
+        );
+      });
+    });
   });
 }
