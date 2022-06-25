@@ -5,19 +5,163 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/services/auth.dart';
+// import mockito and create new file to tests
+// mock class extends Mock implements FirebaseAuth Firestore and new subclass DB, DB uses required for AuthService and Firestore (to be mocked and supplied as parameters)
+// Then create tests that 
 
+
+//Wrapper DB class, every function at DB needs to be forwarded
 class DatabaseService {
   final String? uid;
-  DatabaseService({required this.uid});
+
   AuthService _auth = AuthService();
   //creates users collection in firebase
-  final CollectionReference usersInfoCollection = FirebaseFirestore.instance.collection(
-      'usersInfo');
+  //final CollectionReference usersInfoCollection;
+  
+  
+  final CollectionReference usersInfoCollection = FirebaseFirestore.instance.collection('usersInfo');
   final CollectionReference doctorsInfoCollection = FirebaseFirestore.instance.collection('doctorsInfo');
 
+  DB? db;
+
+  DatabaseService({required this.uid}){
+    this.db = createDB(this.uid, _auth, usersInfoCollection, doctorsInfoCollection);
+  }
+
+
+  DB createDB(String? uid, AuthService _auth,
+      CollectionReference usersInfoCollection, CollectionReference doctorsInfoCollection){
+    return DB(_auth, usersInfoCollection, doctorsInfoCollection, uid: uid);
+  }
 
   /////////////////////////////// users functions ////////////////////////////
+  Future<List> getDocs() async { return db!.getDocs();}
+  Future<List> getUsers() async { return db!.getUsers();}
+  Future updateUserData(String url, String name, String email, String password, String role) async {
+	return db!.updateUserData(url, name, email, password, role); }
+  Future updateUserProfilePhoto(String loc) async { return db!.updateUserProfilePhoto(loc);}
+  
+  Future updateUserName(String name) async{ return db!.updateUserName(name);}
 
+  Future updateUserAge(String age) async{ return db!.updateUserAge(age);}
+
+  Future updateUserGender(String gender) async{ return db!.updateUserGender(gender); }
+
+  Future updateUserUrl(String url) async{return db!.updateUserUrl(url);}
+
+  //add map of date and doctor id
+  Future addMap(int day, int month, int year, String time, String duid) async{return db!.addMap(day, month, year, time, duid);}
+
+  Future updateMsg(String msg, DateTime day, String hour, String email) async{return db!.updateMsg(msg, day, hour, email);}
+  
+
+  Stream<List> fromDateToList(int day, int month, int year){return db!.fromDateToList(day, month, year);}
+
+
+  Stream<String> getUserNameInner() {return db!.getUserNameInner();}
+
+  Stream<String> getUserAgeInner() {return db!.getUserAgeInner();}
+
+  Stream<String> getUserGenderInner() {return db!.getUserGenderInner();}
+  Future<Uint8List?> getProfileImage(String name){return db!.getProfileImage(name);}
+
+  Stream<String> getUrlInner() {return db!.getUrlInner();}
+
+  Stream<String> getRoleInner() {return db!.getRoleInner();}
+
+  Stream<String> getEmailInner(){return db!.getEmailInner();}
+  ////////////////////////////// doctors functions //////////////////////////////////
+  /// the uid entered doesnt matter in the doctors functions... as it only matters in the Users functions
+
+  Future updateDoctorData(String url, String name, String spec, String pos, String lan, String add, String email) async {
+    return db!.updateDoctorData(url, name, spec, pos, lan, add, email);
+  }
+
+  static Future getDoctorsCards(String email) async {return DB.getDoctorsCards(email);}
+
+  static Future deleteDoctorCard(String url) async {return DB.deleteDoctorCard(url);}
+
+  //return doctors name based on his unique value
+  static Stream<String> getDoctorNameInner(String email) {return DB.getDoctorNameInner(email);}
+
+  static Stream<String> getDoctorPosition(String email) {return DB.getDoctorPosition(email);}
+
+  static Stream<String> getDoctorSpeciality(String email) {return DB.getDoctorSpeciality(email);}
+
+  static Stream<String> getDoctorLanguages(String email) {return DB.getDoctorLanguages(email);}
+
+  static Stream<String> getDoctorAdditional(String email) {return DB.getDoctorAdditional(email);}
+
+  static Stream<String> getDoctorUrlInner(String email) {return DB.getDoctorUrlInner(email);}
+
+  Stream<String> getDoctorPosInner(String email) {return db!.getDoctorPosInner(email);}
+
+  Stream<String> getDoctorSpecialtyInner(String email) {return db!.getDoctorSpecialtyInner(email);}
+
+
+
+  Future updateDoctorName(String name, String email) async{return db!.updateDoctorName(name, email);}
+
+  Future updateDoctorSpeciality(String spec, String email) async{return db!.updateDoctorSpeciality(spec, email);}
+
+  Future updateDoctorPos(String pos, String email) async{return db!.updateDoctorPos(pos, email);}
+
+  Future updateDoctorLang(String lan, String email) async{return db!.updateDoctorLang(lan, email);}
+
+  Future updateDoctorAbout(String about, String email) async{return db!.updateDoctorAbout(about, email);}
+
+
+  //////////////////////// extras //////////////////////////////
+
+  //snapshot of change in collection
+  Stream<QuerySnapshot> get users {
+    return usersInfoCollection.snapshots();
+  }
+  QuerySnapshot get user1 {
+    return usersInfoCollection.snapshots() as QuerySnapshot;
+  }
+
+
+
+  Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
+    // doctor_id is doctor's email
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+
+    if (photo == null) return;
+    final fileName = (path);
+    final destination = 'files/' + doctor_id + '/';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child(path);
+      await ref.putData(photo);
+      var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
+      var l = [d];
+
+      doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
+
+    } catch (e) {
+      print('error occured');
+    }
+  }
+
+  
+  
+  
+
+}
+class DB{
+  final String? uid;
+  final AuthService _auth;
+  final CollectionReference usersInfoCollection; 
+  final CollectionReference doctorsInfoCollection;
+
+  DB(this._auth, this.usersInfoCollection, this.doctorsInfoCollection, {required this.uid});
+
+  
+  /////////////////////////////// users functions ////////////////////////////
   Future<List> getDocs() async {
     List ls = [];
     QuerySnapshot querySnapshot = await doctorsInfoCollection.get();
@@ -377,39 +521,7 @@ class DatabaseService {
   }
 
 
-  //////////////////////// extras //////////////////////////////
-
-  //snapshot of change in collection
-  Stream<QuerySnapshot> get users {
-    return usersInfoCollection.snapshots();
-  }
-  QuerySnapshot get user1 {
-    return usersInfoCollection.snapshots() as QuerySnapshot;
-  }
+  
 
 
-
-  Future uploadFile(Uint8List? photo, String path, String doctor_id, String username) async {
-    // doctor_id is doctor's email
-    firebase_storage.FirebaseStorage storage =
-        firebase_storage.FirebaseStorage.instance;
-
-    if (photo == null) return;
-    final fileName = (path);
-    final destination = 'files/' + doctor_id + '/';
-
-    try {
-      final ref = firebase_storage.FirebaseStorage.instance
-          .ref(destination)
-          .child(path);
-      await ref.putData(photo);
-      var d = {'photo': path, 'username': username, 'time': DateTime.now().toString()};
-      var l = [d];
-
-      doctorsInfoCollection.doc(doctor_id).update({"cards": FieldValue.arrayUnion(l)});
-
-    } catch (e) {
-      print('error occured');
-    }
-  }
 }
