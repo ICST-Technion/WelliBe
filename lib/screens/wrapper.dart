@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:wellibe_proj/screens/authenticate/authenticate.dart';
 import 'package:wellibe_proj/screens/security.dart';
 import 'package:wellibe_proj/screens/something_went_wrong.dart';
-import 'package:wellibe_proj/screens/temp.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
 
