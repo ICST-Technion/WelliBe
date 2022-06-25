@@ -177,7 +177,6 @@ class DB {
     return await usersInfoCollection.doc(uid).set({
       'url' : url,
       'email' : email,
-      'password' : password,
       'name' : name,
       'doctors' : " ",
       'role' : role,

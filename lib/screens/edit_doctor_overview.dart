@@ -4,6 +4,11 @@ import 'package:wellibe_proj/screens/something_went_wrong.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/services/auth.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 
 class EditDoctorOverview extends StatefulWidget {
@@ -22,6 +27,57 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
   String? about;
   String? url;
   final AuthService _auth = AuthService();
+
+  Uint8List _image = Uint8List(0);
+  int a = 0;
+  String getmail(){
+    String s = "";
+    if(_auth.getCurrentUser()!.email != null) {
+      s = _auth.getCurrentUser()!.email!;
+    }
+    return s;
+  }
+  _getFromGallery() async {
+    setState(() {
+    });
+    var pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      var pngBytes = imageFile.readAsBytes();
+      //upload and put image at user image location ('profile/username.png')
+      firebase_storage.FirebaseStorage storage =
+          firebase_storage.FirebaseStorage.instance;
+
+      final fileName = getmail();
+      final destination = 'profile/';
+
+      try {
+        final ref = storage
+            .ref(destination)
+            .child(fileName);
+        pngBytes.then((value) => ref.putData(value));
+        var database = DatabaseService(uid:_auth.getCurrentUser()?.uid);
+        database.updateUserProfilePhoto(fileName);
+
+        print("uploaded");
+
+      } catch (e) {
+        print('error');
+        print(e.toString());
+      }
+    }
+  }
+  void load(){
+    if(a < 2){
+      a += 1;
+      setState(() {});
+      print('reloaded');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,29 +124,65 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
                   ),
                 Center(
                   child: Stack(
-                    children: [
-                      StreamBuilder<String>(
-                        stream: DatabaseService.getDoctorUrlInner(widget.email),
-                        builder: (context, snapshot) {
-                          if(snapshot.hasData) {
-                            return CircleAvatar(
-                              backgroundImage: NetworkImage(snapshot.data!),
-                              radius: 60,
-                            );
-                          }
-                          else {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        }
-                      ),
-                      Positioned(
-                        bottom: 5,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Circle-icons-heart.svg/1024px-Circle-icons-heart.svg.png"),
-                          radius: 20,
+                      children: [
+                        StreamBuilder<String>(
+                            stream: _data.getUrlInner(),
+                            builder: (context, snapshot) {
+
+                              if(snapshot.hasData) {
+                                if(!snapshot.data!.contains('http'))
+                                {
+                                  var bytes = _data.getProfileImage(getmail());
+                                  bytes.then((value) => _image=value!);
+                                  var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
+
+                                  return GestureDetector(
+                                    onTap: (){
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 65,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        backgroundImage: MemoryImage(_image),
+                                        radius: 60,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                else{
+                                  return GestureDetector(
+                                    onTap: (){
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 65,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(snapshot.data!),
+                                        radius: 60,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                              else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            }
                         ),
-                      ),
-                    ]
+                        Positioned(
+                            bottom: 5,
+                            child: TextButton(
+                              onPressed: (){print("gallery");
+                              _getFromGallery();
+                              setState(() {});},
+                              child:
+                              CircleAvatar(
+                                backgroundImage: NetworkImage("https://i.pinimg.com/564x/0b/67/66/0b6766991e4e6934fd22b1d8a2abdea1.jpg"),
+                                radius: 20,
+                              ),
+                            )
+                        ),
+                      ]
                   ),
                 ),
                 Padding(
@@ -265,36 +357,39 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
                           ),
                         ),
                         //Spacer(),
-                        Container(
-                          child: ElevatedButton(
-                            child: Text(
-                              "החל שינויים",
-                              style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.only(left: size.width*0.2, right:size.width*0.2, bottom: 10),
+                            child: ElevatedButton(
+                              child: Text(
+                                "החל שינויים",
+                                style: TextStyle(color: AppColors.mainWhite, fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(AppColors.buttonBlue),
+                                padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
+                              ), onPressed: () {
+                              // apply the changes
+                              //url = DatabaseService.getDoctorUrlInner(widget.email) as String;
+                              if(name!=null) {
+                                _data.updateDoctorName(name!, widget.email);
+                              }
+                              if(position!=null) {
+                                _data.updateDoctorPos(position!, widget.email);
+                              }
+                              if(speciality!=null) {
+                                _data.updateDoctorSpeciality(speciality!, widget.email);
+                              }
+                              if(languages!=null) {
+                                _data.updateDoctorLang(languages!, widget.email);
+                              }
+                              if(about!=null) {
+                                _data.updateDoctorAbout(about!, widget.email);
+                              }
+                              // return to the main doctor page
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));
+                            },
                             ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(AppColors.buttonBlue),
-                              padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
-                            ), onPressed: () {
-                            // apply the changes
-                            //url = DatabaseService.getDoctorUrlInner(widget.email) as String;
-                            if(name!=null) {
-                              _data.updateDoctorName(name!, widget.email);
-                            }
-                            if(position!=null) {
-                              _data.updateDoctorPos(position!, widget.email);
-                            }
-                            if(speciality!=null) {
-                              _data.updateDoctorSpeciality(speciality!, widget.email);
-                            }
-                            if(languages!=null) {
-                              _data.updateDoctorLang(languages!, widget.email);
-                            }
-                            if(about!=null) {
-                              _data.updateDoctorAbout(about!, widget.email);
-                            }
-                            // return to the main doctor page
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: widget.email)));
-                          },
                           ),
                         )],
                     ),

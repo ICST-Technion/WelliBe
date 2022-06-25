@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wellibe_proj/screens/authenticate/Login.dart';
 import 'package:wellibe_proj/screens/authenticate/Register.dart';
 import 'package:wellibe_proj/screens/authenticate/forgot_pass.dart';
-import 'package:wellibe_proj/screens/authenticate/sign_in.dart';
 
 //the the sign in and registration screen
 
