@@ -43,7 +43,6 @@ class DatabaseService {
     return await usersInfoCollection.doc(uid).set({
       'url' : url,
       'email' : email,
-      'password' : password,
       'name' : name,
       'doctors' : " ",
       'role' : role,
@@ -77,7 +76,6 @@ class DatabaseService {
 
   Future updateMsg(String msg, DateTime day, String hour, String email) async{
     var sday = day.day.toString() + "-" + day.month.toString() + "-" + day.year.toString();
-    print("yeS");
     return await usersInfoCollection.doc(uid).update({"doctors.$sday.$hour" : [email, msg] });
   }
 

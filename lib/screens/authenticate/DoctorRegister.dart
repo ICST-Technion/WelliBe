@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wellibe_proj/screens/histoy_qr.dart';
 import 'package:wellibe_proj/screens/home/admin_home.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
@@ -54,6 +53,7 @@ class DRegisterScreen extends StatelessWidget {
           SafeArea(
             child: SingleChildScrollView(
               child: Container(
+                padding: EdgeInsets.only(top: size.height*0.07),
                 color: Colors.white,
                 child: Form(
                     key: _formKey,

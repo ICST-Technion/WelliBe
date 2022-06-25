@@ -11,7 +11,6 @@ import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/screens/qr_scanning_page.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/screens/card.dart';
-import 'package:auto_size_text_field/auto_size_text_field.dart';
 
 import '../assets/wellibe_colors.dart';
 
@@ -64,7 +63,7 @@ class _TestPageState extends State<TestPage> {
       _data.addMap(time.day, time.month, time.year, hour, result.rawContent);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorEmail: result.rawContent)),
+        MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorEmail: result.rawContent, day: _selectedDay, hour: hour)),
       );
     }
   }
@@ -273,8 +272,9 @@ class _TestPageState extends State<TestPage> {
                 color: Colors.transparent,
                 child: Align(
                   child:  Tooltip(
+                    triggerMode: TooltipTriggerMode.tap,
                     showDuration: const Duration(seconds: 2),
-                    //waitDuration: const Duration(seconds: 1),
+                    waitDuration: const Duration(seconds: 1),
                     message: 'לחץ ארוך על סמלים להצגת מידע',
                     child: const Icon(Icons.help, color: Colors.black,),
                   ),
@@ -495,32 +495,33 @@ class _DoctorsListState extends State<DoctorsList> {
                           color: Colors.grey[200],
                           height: size.height*0.09,
                           width: size.width,
-                          child: TextField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              fontSize: 14,
-                                      fontWeight: FontWeight.w700),
-                          decoration: InputDecoration(
-                              labelText: msg
-                          ),
-                          onChanged: (String value) {
-                            setState(() => msg = value);
-                            },
-                            ),
+                          // child: TextField(
+                          // textAlign: TextAlign.right,
+                          // style: TextStyle(
+                          //     fontSize: 14,
+                          //             fontWeight: FontWeight.w700),
+                          // decoration: InputDecoration(
+                          //     labelText: msg
+                          // ),
+                          // onChanged: (String value) {
+                          //   setState(() => msg = value);
+                          //   },
+                          //   ),
+                        child: AutoSizeText(msg, maxFontSize: 25, maxLines: 4,),
                       ),
-                      Container(
-                        color: AppColors.mainTeal,
-                        height: size.height*0.03,
-                        child: FlatButton(
-                          color: AppColors.mainTeal,
-                          onPressed: () {
-                            _data.updateMsg(msg, day, hour, email);
-                          },
-                          child:
-                          Text("אישור",
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   color: AppColors.mainTeal,
+                      //   height: size.height*0.03,
+                      //   child: FlatButton(
+                      //     color: AppColors.mainTeal,
+                      //     onPressed: () {
+                      //       _data.updateMsg(msg, day, hour, email);
+                      //     },
+                      //     child:
+                      //     Text("אישור",
+                      //     ),
+                      //   ),
+                      // ),
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
