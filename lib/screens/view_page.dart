@@ -507,7 +507,7 @@ class _DoctorsListState extends State<DoctorsList> {
                           //   setState(() => msg = value);
                           //   },
                           //   ),
-                        child: AutoSizeText(msg, maxFontSize: 25, maxLines: 4,),
+                          child: AutoSizeText(msg, maxFontSize: 25, maxLines: 4, textAlign: TextAlign.right,),
                       ),
                       // Container(
                       //   color: AppColors.mainTeal,

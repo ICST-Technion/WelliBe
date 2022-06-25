@@ -155,15 +155,18 @@ class DoctorInfoPage extends StatelessWidget {
                   color: Colors.grey[300],
                   height: size.height * 0.09,
                   width: size.width,
-                  child: TextField(
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700),
-                    onChanged: (String value) {
-                      _data.updateMsg(value, day, hour, doctorEmail);
-                    },
-                  ),
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextField(
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700),
+                      onChanged: (String value) {
+                        _data.updateMsg(value, day, hour, doctorEmail);
+                      },
+                    ),
+                  )
                 ),
               ),
             ],
