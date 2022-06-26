@@ -1,4 +1,6 @@
 ﻿// ignore: import_of_legacy_library_into_null_safe
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -67,6 +69,23 @@ class _TestPageState extends State<TestPage> {
       );
     }
   }
+  Uint8List _image = Uint8List(0);
+  DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
+  int a = 0;
+  String getmail(){
+    String s = "";
+    if(_auth.getCurrentUser()!.email != null) {
+      s = _auth.getCurrentUser()!.email!;
+    }
+    return s;
+  }
+  void load(){
+    if(a < 4){
+      a += 1;
+      setState(() {});
+      print('reloaded');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +102,7 @@ class _TestPageState extends State<TestPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlatButton(
+            TextButton(
               child: const Text('התנתק', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 await _auth.signOut();
@@ -177,6 +196,27 @@ class _TestPageState extends State<TestPage> {
                               builder: (context, snapshot) {
                                 if(snapshot.hasData) {
                                   img = snapshot.data;
+                                  if(!snapshot.data!.contains('http')){
+                                    var bytes = _data.getProfileImage(getmail());
+                                    bytes.then((value) => _image=value!);
+                                    var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
+                                    return GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundColor: Colors.black,
+                                          child: CircleAvatar(
+                                            radius: 45,
+                                            backgroundImage: MemoryImage(_image),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 }
                                 else{
                                   return SomethingWentWrong();
@@ -457,7 +497,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         else{
                           return SomethingWentWrong();
                         }
-                        return FlatButton(
+                        return TextButton(
                             onPressed: showToast,
                             child: demoDoctorsToDate(url, name, pos, hour, context)
                         );
@@ -526,7 +566,7 @@ class _DoctorsListState extends State<DoctorsList> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => CardSender(email: email)));
                               },
@@ -540,7 +580,7 @@ class _DoctorsListState extends State<DoctorsList> {
                                 ),
                               ),
                             ),
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 //navigate to doctors page
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorOverview(email: email,)));

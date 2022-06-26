@@ -66,7 +66,7 @@ class _PatientOverviewState extends State<PatientOverview> {
     }
   }
   void load(){
-    if(a < 2){
+    if(a < 4){
       a += 1;
       setState(() {});
       print('reloaded');
