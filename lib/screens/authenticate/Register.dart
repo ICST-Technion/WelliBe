@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
 import '../../assets/wellibe_colors.dart';
@@ -31,6 +32,7 @@ class _RegisterScreen extends State<RegisterScreen> {
   String passwordAuth = "";
 
   String error = "";
+  String error2 = "";
 
   final _formKey = GlobalKey<FormState>();
   bool agree = false;
@@ -222,7 +224,15 @@ class _RegisterScreen extends State<RegisterScreen> {
                                     setState(() => error = "");
                                   }
                                   if (_formKey.currentState!.validate() && agree == true){
-                                      dynamic result = await _auth.registerWithEmailAndPassword(firstName+" "+familyName, email, password);
+                                    error2 = "";
+                                    dynamic arr = await _auth
+                                          .registerWithEmailAndPassword(
+                                          firstName + " " + familyName, email,
+                                          password);
+                                    print(arr.toString());
+                                    if(arr.toString() == '[firebase_auth/email-already-in-use] The email address is already in use by another account.'){
+                                      setState(() => error2 = "שם משתמש קיים");
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -251,6 +261,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                               ),
                             ),
                             Text(error, style: TextStyle(color: AppColors.buttonRed),),
+                            Text(error2, style: TextStyle(color: AppColors.buttonRed),),
                             Container(
                               alignment: Alignment.centerRight,
                               margin: EdgeInsets.symmetric(

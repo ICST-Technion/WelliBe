@@ -40,6 +40,8 @@ class _TestPageState extends State<TestPage> {
   final _key = GlobalKey<ScaffoldState>();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
+  int a = 0;
+  Uint8List _image = Uint8List(0);
 
   //List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(List docs, DateTime day){
@@ -56,35 +58,44 @@ class _TestPageState extends State<TestPage> {
 
   Future<void> scanQR() async {
     var result = await BarcodeScanner.scan();
-    DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
+    DatabaseService _data = DatabaseService(uid: _auth
+        .getCurrentUser()
+        ?.uid);
     print(result.type); // The result type (barcode, cancelled, failed)
-    if(result.type == ResultType.Barcode) {
-      DateTime time = DateTime.now().toLocal();
-      String hour = time.hour.toString() + ":" + time.minute.toString();
-      print(time);
-      _data.addMap(time.day, time.month, time.year, hour, result.rawContent);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DoctorInfoPage(doctorEmail: result.rawContent, day: _selectedDay, hour: hour)),
-      );
+    if (result.type == ResultType.Barcode) {
+      String pattern = r'\w+@\w+\.\w+';
+      if (!RegExp(pattern).hasMatch(result.rawContent)) {
+        print("not email");
+      }
+      else{
+        DateTime time = DateTime.now().toLocal();
+        String hour = time.hour.toString() + ":" + time.minute.toString();
+        print(time);
+        _data.addMap(time.day, time.month, time.year, hour, result.rawContent);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              DoctorInfoPage(
+                  doctorEmail: result.rawContent, day: _selectedDay, hour: hour)),
+        );
+      }
     }
   }
-  Uint8List _image = Uint8List(0);
-  DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
-  int a = 0;
+
+
+  void load(){
+    if(a < 2){
+      a += 1;
+      setState(() {});
+      print('reloaded');
+    }
+  }
   String getmail(){
     String s = "";
     if(_auth.getCurrentUser()!.email != null) {
       s = _auth.getCurrentUser()!.email!;
     }
     return s;
-  }
-  void load(){
-    if(a < 4){
-      a += 1;
-      setState(() {});
-      print('reloaded');
-    }
   }
 
   @override
@@ -221,9 +232,30 @@ class _TestPageState extends State<TestPage> {
                                 else{
                                   return SomethingWentWrong();
                                 }
-                                return GestureDetector(
+                                if(!snapshot.data!.contains('http'))
+                                {
+                                  var bytes = _data.getProfileImage(getmail());
+                                  bytes.then((value) => _image=value!);
+                                  var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
+                                  return GestureDetector(
                                   onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                  },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                        child: CircleAvatar(
+                                          radius: 50,
+                                          backgroundColor: Colors.black,
+                                            child: CircleAvatar(
+                                              radius: 45,
+                                              backgroundImage: MemoryImage(_image),
+                                            ),
+                                        ),
+                                    ),
+                                  );
+                                  }
+                                  return GestureDetector(onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -236,7 +268,7 @@ class _TestPageState extends State<TestPage> {
                                       ),
                                     ),
                                   ),
-                                );
+                                  );
                               }
                             ),
                           ),

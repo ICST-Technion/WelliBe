@@ -68,7 +68,8 @@ class AuthService {
       await DB(usersInfoCollection!, doctorsInfoCollection!, uid: user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'user');
       return _userFromFirebaseUser(user);
     } catch(e) {
-      print(e.toString());
+      //print(e.toString());
+      return e;
     }
   }
 
