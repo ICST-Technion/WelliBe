@@ -56,18 +56,20 @@ class _TestPageState extends State<TestPage> {
     return doctorsList;
   }
 
-  Future<void> scanQR() async {
+  Future<void> scanQR(List dlist) async {
+    bool exists = false;
     var result = await BarcodeScanner.scan();
     DatabaseService _data = DatabaseService(uid: _auth
         .getCurrentUser()
         ?.uid);
     print(result.type); // The result type (barcode, cancelled, failed)
-    if (result.type == ResultType.Barcode) {
-      String pattern = r'\w+@\w+\.\w+';
-      if (!RegExp(pattern).hasMatch(result.rawContent)) {
-        print("not email");
+    for(int i =0; i<dlist.length; i++){
+      if(result.rawContent == dlist[i]['email']){
+        exists = true;
       }
-      else{
+    }
+    print(exists);
+    if (result.type == ResultType.Barcode && exists==true) {
         DateTime time = DateTime.now().toLocal();
         String hour = time.hour.toString() + ":" + time.minute.toString();
         print(time);
@@ -78,7 +80,6 @@ class _TestPageState extends State<TestPage> {
               DoctorInfoPage(
                   doctorEmail: result.rawContent, day: _selectedDay, hour: hour)),
         );
-      }
     }
   }
 
@@ -102,6 +103,7 @@ class _TestPageState extends State<TestPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
+    final Future<List> dlist = DatabaseService(uid: _auth.getCurrentUser()?.uid).getDocs();
     String? img = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
     String? name = "אנונימי";
     return Scaffold(
@@ -120,17 +122,27 @@ class _TestPageState extends State<TestPage> {
                 print("sign out");
               },
             ),
-            Tooltip(
-              message: 'לחץ לסריקת הרופא',
-              showDuration: const Duration(seconds: 2),
-              waitDuration: const Duration(seconds: 1),
-              child: IconButton(
-                icon: const Icon(Icons.qr_code_2, color: Colors.black,),
-                iconSize: 40,
-                onPressed: () async {
-                  scanQR();
-                },
-              ),
+            FutureBuilder<Object>(
+              future: dlist,
+              builder: (context, snapshot) {
+                if(snapshot.hasData){
+                  return Tooltip(
+                    message: 'לחץ לסריקת הרופא',
+                    showDuration: const Duration(seconds: 2),
+                    waitDuration: const Duration(seconds: 1),
+                    child: IconButton(
+                      icon: const Icon(Icons.qr_code_2, color: Colors.black,),
+                      iconSize: 40,
+                      onPressed: () async {
+                        scanQR(snapshot.data as List);
+                      },
+                    ),
+                  );
+                }
+                else{
+                  return Center(child: SomethingWentWrong());
+                }
+              }
             ),
           ],
         ),

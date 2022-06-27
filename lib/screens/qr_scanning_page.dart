@@ -158,8 +158,12 @@ class DoctorInfoPage extends StatelessWidget {
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: TextField(
+                        decoration: InputDecoration(
+                            labelText: 'הכנס הערות על התור'
+                        ),
                         textAlign: TextAlign.right,
                         style: TextStyle(
+
                             fontSize: 14,
                             fontWeight: FontWeight.w700),
                         onChanged: (String value) {
