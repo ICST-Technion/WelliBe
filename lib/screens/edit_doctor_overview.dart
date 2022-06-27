@@ -66,7 +66,7 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
         final ref = storage
             .ref(destination)
             .child(fileName);
-        ref.putData(pngBytes);
+        await ref.putData(pngBytes);
         var database = DatabaseService(uid:_auth.getCurrentUser()?.uid);
         database.updateUserProfilePhoto(fileName);
 

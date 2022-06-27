@@ -144,8 +144,8 @@ class DoctorInfoPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(30.0),
-                          child: StreamBuilder<String>(
-                              stream: DatabaseService.getDoctorUrlInner(
+                          child: FutureBuilder<String>(
+                              future: DatabaseService.getImageOfUser(
                                   doctorEmail),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {

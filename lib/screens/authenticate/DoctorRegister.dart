@@ -237,11 +237,7 @@ class DRegisterScreen extends StatelessWidget {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()){
                                   print(_auth.getCurrentUser()?.email);
-
                                   dynamic result = await _auth.doctorRegisterWithEmailAndPassword(firstName+" "+familyName, email, password, positionName, speciality);
-
-                               
-
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => AdminHome()));
                                 }
                               },

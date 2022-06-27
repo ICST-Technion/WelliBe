@@ -126,17 +126,36 @@ class _DoctorsBoxState extends State<DoctorsBox> {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => HospitalDoctorOverview(email: arr['email'])));
         },
-      child: Container(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(arr['url']),
-                ),
-                Text(arr['name']),
-              ],
-            ),
-          ),
+      child: FutureBuilder(
+        future: DatabaseService.getImageOfUser(arr['email']),
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            return Container(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(snapshot.data as String),
+                  ),
+                  Text(arr['name']),
+                ],
+              ),
+            );
+          }
+          else {
+            return Container(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                  ),
+                  Text(arr['name']),
+                ],
+              ),
+            );
+          }
+        }
+      )
     );
   }
 

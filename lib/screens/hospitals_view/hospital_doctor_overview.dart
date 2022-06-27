@@ -44,8 +44,8 @@ class _HospitalDoctorOverviewState extends State<HospitalDoctorOverview> {
                       Center(
                         child: Stack(
                             children: [
-                              StreamBuilder<String>(
-                                  stream: DatabaseService.getDoctorUrlInner(widget.email),
+                              FutureBuilder<String>(
+                                  future: DatabaseService.getImageOfUser(widget.email),
                                   builder: (context, snapshot) {
                                     if(snapshot.hasData) {
                                       return CircleAvatar(
@@ -58,7 +58,13 @@ class _HospitalDoctorOverviewState extends State<HospitalDoctorOverview> {
                                       );
                                     }
                                     else {
-                                      return Center(child: CircularProgressIndicator());
+                                      return CircleAvatar(
+                                        radius: 90,
+                                        backgroundColor: Colors.black,
+                                        child: CircleAvatar(
+                                          radius: 84,
+                                        ),
+                                      );
                                     }
                                   }
                               ),

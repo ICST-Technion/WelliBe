@@ -525,8 +525,8 @@ class _DoctorsListState extends State<DoctorsList> {
                 else{
                   return SomethingWentWrong();
                 }
-                return StreamBuilder<Object>(
-                  stream: DatabaseService.getDoctorUrlInner(email),
+                return FutureBuilder<Object>(
+                  future: DatabaseService.getImageOfUser(email),
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
                       url = snapshot.data as String;

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:wellibe_proj/models/user.dart';
 import 'package:wellibe_proj/services/auth.dart';
@@ -92,6 +93,8 @@ class DatabaseService {
   static Stream<String> getDoctorAdditional(String email) {return DB.getDoctorAdditional(email);}
 
   static Stream<String> getDoctorUrlInner(String email) {return DB.getDoctorUrlInner(email);}
+
+  static Future<String> getImageOfUser(String email) {return DB.getImageOfUser(email);}
 
   Stream<String> getDoctorPosInner(String email) {return db!.getDoctorPosInner(email);}
 
@@ -454,6 +457,10 @@ class DB {
         return 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
       }
     });
+  }
+
+  static Future<String> getImageOfUser(String email) {
+    return FirebaseStorage.instance.ref().child('profile/' + email).getDownloadURL();
   }
 
   Stream<String> getDoctorPosInner(String email) {
