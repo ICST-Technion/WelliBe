@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:galleryimage/galleryimage.dart';
 import 'package:wellibe_proj/screens/edit_doctor_overview.dart';
@@ -124,17 +125,65 @@ class _CardViewerState extends State<TestCardViewer> {
                                   email = snapshot.data;
                                   return Container(
                                     padding: const EdgeInsets.only(right: 15),
-                                    child: StreamBuilder<String>(
-                                        stream: _data.getUrlInner(),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            img = snapshot.data;
-                                          }
-                                          return GestureDetector(
-                                            onTap: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditDoctorOverview(email: email)));
-                                            },
-                                            child: Padding(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditDoctorOverview(
+                                                        email: email)));
+                                      },
+                                      child: StreamBuilder<String>(
+                                          stream: _data.getUrlInner(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              img = snapshot.data;
+                                              if(!snapshot.data!.contains('http')) {
+                                                return FutureBuilder(
+                                                    future: FirebaseStorage.instance.ref().child('profile/' + img!).getDownloadURL(),
+                                                    builder: (context, snapshot) {
+                                                      if(snapshot.hasData) {
+                                                        return Padding(
+                                                          padding: const EdgeInsets.all(
+                                                              8.0),
+                                                          child: CircleAvatar(
+                                                            radius: 50,
+                                                            backgroundColor: Colors.black,
+                                                            child: CircleAvatar(
+                                                              radius: 45,
+                                                              backgroundImage: NetworkImage(
+                                                                  snapshot.data as String),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      else {
+                                                        return CircleAvatar(
+                                                          radius: 50,
+                                                          backgroundColor: Colors.black,
+                                                          child: CircleAvatar(
+                                                            radius: 45,
+                                                          ),
+                                                        );
+                                                      }
+                                                    }
+                                                );
+                                              }
+                                              return Padding(
+                                                padding: const EdgeInsets.all(
+                                                    8.0),
+                                                child: CircleAvatar(
+                                                  radius: 50,
+                                                  backgroundColor: Colors.black,
+                                                  child: CircleAvatar(
+                                                    radius: 45,
+                                                    backgroundImage: NetworkImage(
+                                                        img!),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            return Padding(
                                               padding: const EdgeInsets.all(
                                                   8.0),
                                               child: CircleAvatar(
@@ -142,14 +191,12 @@ class _CardViewerState extends State<TestCardViewer> {
                                                 backgroundColor: Colors.black,
                                                 child: CircleAvatar(
                                                   radius: 45,
-                                                  backgroundImage: NetworkImage(
-                                                      img!),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        }
-                                    ),
+                                            );
+                                          }
+                                        ),
+                                      ),
                                   );
                                 }
                                 else{

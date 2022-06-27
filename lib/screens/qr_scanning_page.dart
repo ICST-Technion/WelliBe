@@ -20,7 +20,68 @@ class QRErrorPage extends StatefulWidget {
 class _QRErrorPageState extends State<QRErrorPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Material(
+      child: Container(
+        color: Colors.teal[300],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: AppColors.mainWhite,
+                    ),
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 3,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                        "לא נמצא רופא במערכת",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20)),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              padding: EdgeInsets.all(20),
+                              primary: Colors.indigo.shade900,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(Icons.favorite),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

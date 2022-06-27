@@ -29,7 +29,8 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
   final AuthService _auth = AuthService();
 
   Uint8List _image = Uint8List(0);
-  int a = 0;
+  bool isFirstOpen = true;
+
   String getmail(){
     String s = "";
     if(_auth.getCurrentUser()!.email != null) {
@@ -37,9 +38,14 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
     }
     return s;
   }
+
+  Future getFirstImage(DatabaseService _data) async {
+    var image = await _data.getProfileImage(getmail());
+    setState(() { _image = image!; });
+    return Future.delayed(Duration.zero);
+  }
+
   _getFromGallery() async {
-    setState(() {
-    });
     var pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxWidth: 1800,
@@ -47,7 +53,8 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
     );
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
-      var pngBytes = imageFile.readAsBytes();
+      var pngBytes = await imageFile.readAsBytes();
+      setState(() { _image = pngBytes; });
       //upload and put image at user image location ('profile/username.png')
       firebase_storage.FirebaseStorage storage =
           firebase_storage.FirebaseStorage.instance;
@@ -59,7 +66,7 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
         final ref = storage
             .ref(destination)
             .child(fileName);
-        pngBytes.then((value) => ref.putData(value));
+        ref.putData(pngBytes);
         var database = DatabaseService(uid:_auth.getCurrentUser()?.uid);
         database.updateUserProfilePhoto(fileName);
 
@@ -69,13 +76,6 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
         print('error');
         print(e.toString());
       }
-    }
-  }
-  void load(){
-    if(a < 2){
-      a += 1;
-      setState(() {});
-      print('reloaded');
     }
   }
 
@@ -128,45 +128,56 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
                         StreamBuilder<String>(
                             stream: _data.getUrlInner(),
                             builder: (context, snapshot) {
-
                               if(snapshot.hasData) {
-                                if(!snapshot.data!.contains('http'))
-                                {
-                                  var bytes = _data.getProfileImage(getmail());
-                                  bytes.then((value) => _image=value!);
-                                  var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
-
-                                  return GestureDetector(
-                                    onTap: (){
-                                    },
+                                if(!snapshot.data!.contains('http')) {
+                                  if(isFirstOpen) {
+                                    isFirstOpen = false;
+                                    return FutureBuilder(
+                                        future: getFirstImage(_data),
+                                        builder: (context, snapshot) {
+                                          if(snapshot.hasData) {
+                                            return CircleAvatar(
+                                              radius: 65,
+                                              backgroundColor: Colors.black,
+                                              child: CircleAvatar(
+                                                backgroundImage: MemoryImage(_image),
+                                                radius: 60,
+                                              ),
+                                            );
+                                          }
+                                          else {
+                                            return CircleAvatar(
+                                              radius: 65,
+                                              backgroundColor: Colors.black,
+                                              child: CircleAvatar(
+                                                radius: 60,
+                                              ),
+                                            );
+                                          }
+                                        });
+                                  }
+                                  return CircleAvatar(
+                                    radius: 65,
+                                    backgroundColor: Colors.black,
                                     child: CircleAvatar(
-                                      radius: 65,
-                                      backgroundColor: Colors.black,
-                                      child: CircleAvatar(
-                                        backgroundImage: MemoryImage(_image),
-                                        radius: 60,
-                                      ),
-                                    ),
-                                  );
-                                }
-                                else{
-                                  return GestureDetector(
-                                    onTap: (){
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 65,
-                                      backgroundColor: Colors.black,
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(snapshot.data!),
-                                        radius: 60,
-                                      ),
+                                      backgroundImage: MemoryImage(_image),
+                                      radius: 60,
                                     ),
                                   );
                                 }
                               }
-                              else {
-                                return Center(child: CircularProgressIndicator());
-                              }
+                              return GestureDetector(
+                                onTap: (){
+                                },
+                                child: CircleAvatar(
+                                  radius: 65,
+                                  backgroundColor: Colors.black,
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot.data!),
+                                    radius: 60,
+                                  ),
+                                ),
+                              );
                             }
                         ),
                         Positioned(

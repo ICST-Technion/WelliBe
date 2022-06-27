@@ -296,12 +296,7 @@ class DB {
         .map((doc) {
       if (doc['url'] is String &&
           (doc['url'] as String).isNotEmpty) {
-        if(doc['url'].contains('http')) {
-          return doc['url'];
-        }
-        else{
-          return "";
-        }
+        return doc['url'];
       } else {
         return 'https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg';
       }

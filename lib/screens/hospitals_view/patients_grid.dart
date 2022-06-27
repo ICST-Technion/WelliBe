@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
@@ -129,6 +130,15 @@ class _UsersBoxState extends State<UsersBox> {
   var arr;
   _UsersBoxState(this.arr);
 
+  Future<NetworkImage> getUserImage(String url) async {
+    if(url.contains('http')) {
+      return NetworkImage(url);
+    }
+    else {
+      return NetworkImage(await FirebaseStorage.instance.ref().child('profile/' + url).getDownloadURL());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -137,9 +147,21 @@ class _UsersBoxState extends State<UsersBox> {
       child: Container(
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(arr['url']),
+            FutureBuilder(
+              future: getUserImage(arr['url']),
+              builder: (context, snapshot) {
+               if(snapshot.hasData) {
+                 return CircleAvatar(
+                     radius: 50,
+                     backgroundImage: snapshot.data as NetworkImage,
+                 );
+                }
+                else {
+                  return CircleAvatar(
+                    radius: 50,
+                  );
+                }
+              }
             ),
             Text(arr['name']),
           ],
