@@ -1,6 +1,7 @@
 ﻿// ignore: import_of_legacy_library_into_null_safe
 import 'dart:typed_data';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -68,8 +69,8 @@ class _TestPageState extends State<TestPage> {
         exists = true;
       }
     }
-    print(exists);
-    if (result.type == ResultType.Barcode && exists==true) {
+
+    if (result.type == ResultType.Barcode && exists == true) {
         DateTime time = DateTime.now().toLocal();
         String hour = time.hour.toString() + ":" + time.minute.toString();
         print(time);
@@ -81,16 +82,15 @@ class _TestPageState extends State<TestPage> {
                   doctorEmail: result.rawContent, day: _selectedDay, hour: hour)),
         );
     }
-  }
-
-
-  void load(){
-    if(a < 2){
-      a += 1;
-      setState(() {});
-      print('reloaded');
+    else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>
+            QRErrorPage()),
+      );
     }
   }
+
   String getmail(){
     String s = "";
     if(_auth.getCurrentUser()!.email != null) {
@@ -219,13 +219,52 @@ class _TestPageState extends State<TestPage> {
                               builder: (context, snapshot) {
                                 if(snapshot.hasData) {
                                   img = snapshot.data;
-                                  if(!snapshot.data!.contains('http')){
-                                    var bytes = _data.getProfileImage(getmail());
-                                    bytes.then((value) => _image=value!);
-                                    var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
+                                  if(!snapshot.data!.contains('http')) {
+                                    return FutureBuilder(
+                                      future: FirebaseStorage.instance.ref().child('profile/' + getmail()).getDownloadURL(),
+                                      builder: (context, snapshot) {
+                                        if(snapshot.hasData) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PatientOverview()));
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                  8.0),
+                                              child: CircleAvatar(
+                                                radius: 50,
+                                                backgroundColor: Colors.black,
+                                                child: CircleAvatar(
+                                                  radius: 45,
+                                                  backgroundImage: NetworkImage(
+                                                      snapshot.data as String),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        else {
+                                          return CircleAvatar(
+                                            radius: 50,
+                                            backgroundColor: Colors.black,
+                                            child: CircleAvatar(
+                                              radius: 45,
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    );
+                                  }
+                                  else {
                                     return GestureDetector(
-                                      onTap: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PatientOverview()));
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
@@ -234,53 +273,16 @@ class _TestPageState extends State<TestPage> {
                                           backgroundColor: Colors.black,
                                           child: CircleAvatar(
                                             radius: 45,
-                                            backgroundImage: MemoryImage(_image),
+                                            backgroundImage: NetworkImage(img!),
                                           ),
                                         ),
                                       ),
                                     );
                                   }
                                 }
-                                else{
-                                  return SomethingWentWrong();
+                                else {
+                                  return Center(child: CircularProgressIndicator());
                                 }
-                                if(!snapshot.data!.contains('http'))
-                                {
-                                  var bytes = _data.getProfileImage(getmail());
-                                  bytes.then((value) => _image=value!);
-                                  var future = new Future.delayed(const Duration(milliseconds: 200), ()=>load());
-                                  return GestureDetector(
-                                  onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
-                                  },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          backgroundColor: Colors.black,
-                                            child: CircleAvatar(
-                                              radius: 45,
-                                              backgroundImage: MemoryImage(_image),
-                                            ),
-                                        ),
-                                    ),
-                                  );
-                                  }
-                                  return GestureDetector(onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PatientOverview()));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleAvatar(
-                                      radius: 50,
-                                      backgroundColor: Colors.black,
-                                      child: CircleAvatar(
-                                        radius: 45,
-                                        backgroundImage: NetworkImage(img!),
-                                      ),
-                                    ),
-                                  ),
-                                  );
                               }
                             ),
                           ),

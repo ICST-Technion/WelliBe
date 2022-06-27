@@ -10,6 +10,21 @@ import '../assets/wellibe_colors.dart';
 
 const String yourDoctorIsString = 'המטפל/ת שלך הוא/היא';
 
+class QRErrorPage extends StatefulWidget {
+  const QRErrorPage({Key? key}) : super(key: key);
+
+  @override
+  State<QRErrorPage> createState() => _QRErrorPageState();
+}
+
+class _QRErrorPageState extends State<QRErrorPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
 class DoctorInfoPage extends StatelessWidget {
   final String doctorEmail;
   final DateTime day;

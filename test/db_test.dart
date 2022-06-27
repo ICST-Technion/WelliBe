@@ -69,12 +69,15 @@ void main() async {
   final mockDoctorsInfo = fakeFirestore.collection('doctorsInfo');
   MAuth mockAuth = MAuth();
 
-  final AuthService auth = AuthService(authMock: mockAuth, usersInfoMock: mockUsersInfo, doctorsInfoMock: mockDoctorsInfo);
+  final AuthService auth = AuthService(authMock: mockAuth,
+      usersInfoMock: mockUsersInfo,
+      doctorsInfoMock: mockDoctorsInfo);
 
   group("auth tests", () {
     group("user tests", () {
       test("create accounts", () async {
-        await auth.registerWithEmailAndPassword("user", "user@gmail.com", "123456");
+        await auth.registerWithEmailAndPassword(
+            "user", "user@gmail.com", "123456");
       });
 
       test("good sign in", () async {
@@ -97,15 +100,16 @@ void main() async {
 
       test("sign out", () async {
         expect(
-          await auth.signOut(),
-          true
+            await auth.signOut(),
+            true
         );
       });
     });
 
     group("doctor tests", () {
       test("create accounts", () async {
-        await auth.doctorRegisterWithEmailAndPassword("doctor", "doctor@gmail.com", "123456", "position", "speciality");
+        await auth.doctorRegisterWithEmailAndPassword(
+            "doctor", "doctor@gmail.com", "123456", "position", "speciality");
       });
 
       test("good sign in", () async {
@@ -156,8 +160,8 @@ void main() async {
           ls.add(a);
         }
         expect(
-          await mockDB.getUsers(),
-          ls
+            await mockDB.getUsers(),
+            ls
         );
       });
     });
@@ -210,3 +214,4 @@ void main() async {
       });
     });
   });
+}
