@@ -12,6 +12,8 @@ import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/services/auth.dart';
 
+void test() => runApp(const CardSender(email:'unit@testing.com'));
+
 class CardSender extends StatefulWidget {
   final String email;
   const CardSender({required this.email});
@@ -189,6 +191,7 @@ class _CardSenderState extends State<CardSender> {
                       child: TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: 9,
+                        key: const Key('textbox'),
                         textAlign: TextAlign.center,
                         onChanged: changetext,
                         controller: txt,
@@ -220,6 +223,7 @@ class _CardSenderState extends State<CardSender> {
             Visibility(
               child: BottomNavigationBar(
                 onTap: edit,
+                key: const Key('color_red'),
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: Colors.white,
                 selectedItemColor: Colors.brown,
