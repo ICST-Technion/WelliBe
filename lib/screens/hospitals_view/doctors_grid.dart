@@ -148,6 +148,7 @@ class _DoctorsBoxState extends State<DoctorsBox> {
                 children: [
                   CircleAvatar(
                     radius: 50,
+                    backgroundColor: Colors.black,
                   ),
                   Text(arr['name']),
                 ],

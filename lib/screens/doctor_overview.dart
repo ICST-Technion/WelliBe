@@ -161,33 +161,6 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   StreamBuilder<String>(
-                                      stream: DatabaseService.getDoctorSpeciality(widget.email),
-                                      builder: (context, snapshot) {
-                                        var _isVis = false;
-                                        var text = "";
-                                        if (snapshot.hasData && snapshot.data!='') {
-                                          _isVis = true;
-                                          text = snapshot.data as String;
-                                        }
-                                        return Visibility(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "התחמחות:",
-                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                text,
-                                                style: TextStyle(fontSize: 18,),
-                                              ),
-                                            ],
-                                          ),
-                                          visible: _isVis,
-                                        );
-                                      }
-                                  ),
-                                  StreamBuilder<String>(
                                       stream: DatabaseService.getDoctorPosition(widget.email),
                                       builder: (context, snapshot) {
                                         var _isVis = false;
@@ -202,6 +175,33 @@ class _DoctorOverviewState extends State<DoctorOverview> {
                                             children: [
                                               Text(
                                                 "תפקידים:",
+                                                style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                text,
+                                                style: TextStyle(fontSize: 18,),
+                                              ),
+                                            ],
+                                          ),
+                                          visible: _isVis,
+                                        );
+                                      }
+                                  ),
+                                  StreamBuilder<String>(
+                                      stream: DatabaseService.getDoctorSpeciality(widget.email),
+                                      builder: (context, snapshot) {
+                                        var _isVis = false;
+                                        var text = "";
+                                        if (snapshot.hasData && snapshot.data!='') {
+                                          _isVis = true;
+                                          text = snapshot.data as String;
+                                        }
+                                        return Visibility(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "התחמחות:",
                                                 style: TextStyle(color: AppColors.textGreen, fontSize: 18, fontWeight: FontWeight.bold),
                                               ),
                                               Text(

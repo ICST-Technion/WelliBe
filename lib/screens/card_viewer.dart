@@ -219,6 +219,12 @@ class _CardViewerState extends State<TestCardViewer> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             var urls = snapshot.data as List<String>;
+                            if(urls.length == 0){
+                              return Center(
+                                child: Text(
+                                  'עוד לא נשלחו כרטיסי ברכה', style: TextStyle(fontSize: 20),),
+                              );
+                            }
                             print(urls);
                             return GridView.builder(
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -273,7 +279,9 @@ class _CardViewerState extends State<TestCardViewer> {
                             );
                           }
                           else {
-                            return Center(child: SomethingWentWrong(),);
+                            return Center(
+                              child: SomethingWentWrong(),
+                            );
                           }
                         }
                     )

@@ -64,6 +64,7 @@ class _TestPageState extends State<TestPage> {
         .getCurrentUser()
         ?.uid);
     print(result.type); // The result type (barcode, cancelled, failed)
+    print(result.rawContent);
     for(int i =0; i<dlist.length; i++){
       if(result.rawContent == dlist[i]['email']){
         exists = true;
@@ -494,7 +495,7 @@ class _DoctorsListState extends State<DoctorsList> {
   final DatabaseService _data = DatabaseService(uid: _auth.getCurrentUser()?.uid);
   bool _isVisible = false;
   var name = "אנונימי";
-  var url = 'https://image.shutterstock.com/image-vector/profile-photo-vector-placeholder-pic-600w-535853263.jpg';
+  var url = 'https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg';
   var pos = '';
   void showToast() {
     setState(() {
@@ -530,9 +531,6 @@ class _DoctorsListState extends State<DoctorsList> {
                   builder: (context, snapshot) {
                     if(snapshot.hasData){
                       url = snapshot.data as String;
-                    }
-                    else{
-                      return SomethingWentWrong();
                     }
                     return StreamBuilder<Object>(
                       stream: _data.getDoctorPosInner(email),
