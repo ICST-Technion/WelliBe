@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:wellibe_proj/services/database.dart';
-import 'package:wellibe_proj/models/user.dart';
+import 'package:wellibe_proj/models/models.dart';
 
 class AuthService {
   FirebaseAuth? _auth;
@@ -13,6 +13,7 @@ class AuthService {
   late UserClass? _currentUser = _userFromFirebaseUser(_auth!.currentUser);
 
   AuthService({authMock=null, usersInfoMock=null, doctorsInfoMock=null}) {
+    // initialize all mock objects if needed
     if(authMock != null) {
       this._auth = authMock;
     }
@@ -35,8 +36,8 @@ class AuthService {
     }
   }
 
-  //create user object
   UserClass? _userFromFirebaseUser(User? user) {
+    // get a UserClass from the firebase User
     return user != null ? UserClass(uid: user.uid, url: user.photoURL, name: user.displayName) : null;
   }
 
@@ -75,10 +76,6 @@ class AuthService {
 
   Future doctorRegisterWithEmailAndPassword(String name, String email, String password, String position, String speciality) async {
     try{
-      /*FirebaseApp app = await Firebase.initializeApp(
-          name: 'Secondary', options: Firebase.app().options);
-      UserCredential result = await FirebaseAuth.instanceFor(app: app)
-          .createUserWithEmailAndPassword(email: email, password: password);*/
       UserCredential result = await _auth!.createUserWithEmailAndPassword(email: email, password: password);
       User? new_user = result.user;
       //create a new document for the user with the uid
@@ -86,7 +83,7 @@ class AuthService {
       await DB(usersInfoCollection!, doctorsInfoCollection!, uid: new_user?.uid).updateUserData('https://st4.depositphotos.com/11634452/41441/v/1600/depositphotos_414416674-stock-illustration-picture-profile-icon-male-icon.jpg', name, email, password, 'doctor');
 
       return _userFromFirebaseUser(new_user);
-    }catch(e){
+    } catch(e) {
       print(e.toString());
     }
   }
@@ -95,7 +92,7 @@ class AuthService {
   Future signOut() async {
     try{
       return await _auth!.signOut();
-    }catch(e){
+    } catch(e) {
       print(e.toString());
       return null;
     }
@@ -110,7 +107,7 @@ class AuthService {
     try{
       var u = _userFromFirebaseUser(_auth!.currentUser);
       return u != null ? u.url : '';
-    } catch(e){
+    } catch(e) {
       print(e.toString());
       return '';
     }
@@ -125,11 +122,4 @@ class AuthService {
       print('כתובת מייל לא קיימת');
     }
   }
-
-  // Future _populateCurrentUser(User user) async{
-  //   DatabaseService _data = DatabaseService(uid: _auth.currentUser?.uid);
-  //   if(user!=null){
-  //     _currentUser = await _data.getUser(_auth.currentUser?.uid);
-  //   }
-  // }
 }

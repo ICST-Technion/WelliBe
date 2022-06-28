@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-import '../../assets/wellibe_colors.dart';
-import 'Login.dart';
-import 'package:flutter/material.dart';
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
-import 'package:wellibe_proj/services/auth.dart';
-import 'Register.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function toggleView;
@@ -20,17 +15,11 @@ class _RegisterScreen extends State<RegisterScreen> {
   _RegisterScreen({required this.toggleView});
 
   final AuthService _auth = AuthService();
-
   String firstName = "";
-
   String familyName = "";
-
   String email = "";
-
   String password = "";
-
   String passwordAuth = "";
-
   String error = "";
   String error2 = "";
 

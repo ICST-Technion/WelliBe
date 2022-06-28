@@ -6,8 +6,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:wellibe_proj/assets/wellibe_colors.dart';
 
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/screens/view_page.dart';
 import 'package:wellibe_proj/services/database.dart';
 import 'package:wellibe_proj/services/auth.dart';
@@ -17,6 +17,7 @@ void test() => runApp(const CardSender(email:'unit@testing.com'));
 class CardSender extends StatefulWidget {
   final String email;
   const CardSender({required this.email});
+
   @override
   State<CardSender> createState() => _CardSenderState();
 }
@@ -38,7 +39,7 @@ class _CardSenderState extends State<CardSender> {
   GlobalKey _globalKey = new GlobalKey();
   String doctor_id = "";
 
-  void changetext(String str){
+  void changetext(String str) {
       if(str.split("\n").length > 9 * (13.0/fontsize) || str.length < txt.text.length){
         txt.text = content;
       }
@@ -46,8 +47,7 @@ class _CardSenderState extends State<CardSender> {
       content = str;
     }
   }
-  void menu(int idx)
-  {
+  void menu(int idx) {
     setState(() {});
 
     selected_edit = idx;
@@ -57,8 +57,8 @@ class _CardSenderState extends State<CardSender> {
     index = idx;
     //txt.text = sizes[index].toString();
   }
-  void edit(int idx)
-  {
+
+  void edit(int idx) {
     setState(() {});
     if(selected_edit == 0){
       var colors = [Colors.red, Colors.black, Colors.blue, Colors.green];
@@ -76,6 +76,7 @@ class _CardSenderState extends State<CardSender> {
         {weight = FontWeight.w900;}
     }
   }
+
   Future<Uint8List> _capturePng() async {
     try {
       print('inside');
@@ -96,10 +97,10 @@ class _CardSenderState extends State<CardSender> {
     }
   }
 
-    void send() async{
+  void send() async{
     doctor_id = widget.email;
     final _auth = AuthService();
-    //TODO: send card data to server here
+
     var png = await _capturePng();
     String? username = _auth.getCurrentUser()?.uid;
     var database = DatabaseService(uid:_auth.getCurrentUser()?.uid);
@@ -107,25 +108,16 @@ class _CardSenderState extends State<CardSender> {
     if (username != null){
       uname = username;
     }
-    print(uname + doctor_id);
+
     database.uploadFile(png, uname + doctor_id + DateTime.now().toString(), doctor_id, uname);
     Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPage()));
-
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         backgroundColor: Colors.white,
         leadingWidth: 85,
         toolbarHeight: 50,
@@ -154,8 +146,6 @@ class _CardSenderState extends State<CardSender> {
         ),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: RepaintBoundary(
           key:_globalKey,
           child: Container(

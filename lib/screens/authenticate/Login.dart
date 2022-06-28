@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
-import 'Register.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
   String error;
   LoginScreen({required this.toggleView, this.error = ''});
+
   @override
   _LoginScreen createState() => _LoginScreen(toggleView: this.toggleView, error: this.error);
 }
+
 class _LoginScreen extends State<LoginScreen> {
   final Function toggleView;
   String error;
+
   _LoginScreen({required this.toggleView, this.error = ''});
 
   String email = "";
   String password = "";
-  final _formKey = GlobalKey<FormState>();
 
+  final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

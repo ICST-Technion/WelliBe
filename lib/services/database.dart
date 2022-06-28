@@ -1,25 +1,18 @@
 import 'dart:typed_data';
 import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:wellibe_proj/models/user.dart';
+import 'package:wellibe_proj/models/models.dart';
 import 'package:wellibe_proj/services/auth.dart';
-// import mockito and create new file to tests
-// mock class extends Mock implements FirebaseAuth Firestore and new subclass DB, DB uses required for AuthService and Firestore (to be mocked and supplied as parameters)
-// Then create tests that 
-
 
 //Wrapper DB class, every function at DB needs to be forwarded
 class DatabaseService {
   final String? uid;
-
   AuthService _auth = AuthService();
-  //creates users collection in firebase
-  //final CollectionReference usersInfoCollection;
-  
-  
+
   final CollectionReference usersInfoCollection = FirebaseFirestore.instance.collection('usersInfo');
   final CollectionReference doctorsInfoCollection = FirebaseFirestore.instance.collection('doctorsInfo');
 
@@ -99,8 +92,6 @@ class DatabaseService {
   Stream<String> getDoctorPosInner(String email) {return db!.getDoctorPosInner(email);}
 
   Stream<String> getDoctorSpecialtyInner(String email) {return db!.getDoctorSpecialtyInner(email);}
-
-
 
   Future updateDoctorName(String name, String email) async{return db!.updateDoctorName(name, email);}
 
@@ -450,6 +441,9 @@ class DB {
         .doc(email)
         .snapshots()
         .map((doc) {
+          print('******************');
+          print(doc);
+          print(doc['url']);
       if (doc['url'] is String &&
           (doc['url'] as String).isNotEmpty) {
         return doc['url'];

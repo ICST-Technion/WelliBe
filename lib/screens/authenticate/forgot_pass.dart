@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:wellibe_proj/assets/wellibe_colors.dart';
 import 'package:wellibe_proj/services/auth.dart';
-import 'Register.dart';
 
 class ForgotPassScreen extends StatelessWidget {
-
   final Function toggleView;
   ForgotPassScreen({required this.toggleView});
 
   String email = "";
 
   final _formKey = GlobalKey<FormState>();
-
   final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -69,6 +67,7 @@ class ForgotPassScreen extends StatelessWidget {
                 ),
 
                 SizedBox(height: size.height * 0.03),
+
                 Container(
                   alignment: Alignment.centerRight,
                   margin: EdgeInsets.only(right: 20),
@@ -88,7 +87,7 @@ class ForgotPassScreen extends StatelessWidget {
                     onPressed: () async { //
                       if (_formKey.currentState!.validate()){
                         _auth.sendResetEmail(email);
-                        toggleView(1);
+                        toggleView(1); // toggle view to the sign in page after password reset
 
                       }
                     },
@@ -122,7 +121,7 @@ class ForgotPassScreen extends StatelessWidget {
                   margin: EdgeInsets.only(right: 20, top: 30),
                   child: GestureDetector(
                     onTap: (){
-                      toggleView(2);
+                      toggleView(2); // toggle view to the register page
                     },
                     child: Text(
                       "אין חשבון? הירשם",
@@ -139,7 +138,7 @@ class ForgotPassScreen extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: GestureDetector(
                     onTap: (){
-                      toggleView(1);
+                      toggleView(1); // toggle view back to the sign in page
                     },
                     child: Text(
                       "נזכרת בסיסמה? חזור להתחברות",

@@ -47,11 +47,11 @@ class _TestPageState extends State<TestPage> {
   //List<DoctorsList> doctorsList = [];
   List<DoctorsList> buildList(List docs, DateTime day){
     List<DoctorsList> doctorsList = [];
-    if (docs == null) {
+    if (docs == null) { // add an "empty" doctor to print that there are no doctors here
       doctorsList.add(DoctorsList(key: Key("100"), counter: -100, arr: docs, day: day));
       return doctorsList;
     }
-    for(int i = 0; i < docs.length; i++) {
+    for(int i = 0; i < docs.length; i++) { // add every doctor to the list
       doctorsList.add(DoctorsList(key: Key(DateTime.now().toLocal().toString()), counter: i, arr: docs[i], day: day));
     }
     return doctorsList;
@@ -66,7 +66,7 @@ class _TestPageState extends State<TestPage> {
     print(result.type); // The result type (barcode, cancelled, failed)
     print(result.rawContent);
     for(int i =0; i<dlist.length; i++){
-      if(result.rawContent == dlist[i]['email']){
+      if(result.rawContent == dlist[i]['email']) { // search if the QR value is legal and in the system
         exists = true;
       }
     }
@@ -87,12 +87,12 @@ class _TestPageState extends State<TestPage> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
-            QRErrorPage()),
+            QRErrorPage()), // data is not in the system
       );
     }
   }
 
-  String getmail(){
+  String getmail() {
     String s = "";
     if(_auth.getCurrentUser()!.email != null) {
       s = _auth.getCurrentUser()!.email!;
@@ -336,6 +336,7 @@ class _TestPageState extends State<TestPage> {
                   padding: EdgeInsets.only(top:10),
                   color: Colors.teal[300],
                   child: StreamBuilder(
+                    // get all doctors from the current date
                     stream: _data.fromDateToList(_selectedDay.day, _selectedDay.month, _selectedDay.year),
                     builder: (context, snapshot) {
                       if(snapshot.hasData){
@@ -579,33 +580,8 @@ class _DoctorsListState extends State<DoctorsList> {
                           color: Colors.grey[200],
                           height: size.height*0.09,
                           width: size.width,
-                          // child: TextField(
-                          // textAlign: TextAlign.right,
-                          // style: TextStyle(
-                          //     fontSize: 14,
-                          //             fontWeight: FontWeight.w700),
-                          // decoration: InputDecoration(
-                          //     labelText: msg
-                          // ),
-                          // onChanged: (String value) {
-                          //   setState(() => msg = value);
-                          //   },
-                          //   ),
                         child: AutoSizeText(msg, maxFontSize: 25, maxLines: 4, textAlign: TextAlign.right, textDirection: TextDirection.rtl,),
                       ),
-                      // Container(
-                      //   color: AppColors.mainTeal,
-                      //   height: size.height*0.03,
-                      //   child: FlatButton(
-                      //     color: AppColors.mainTeal,
-                      //     onPressed: () {
-                      //       _data.updateMsg(msg, day, hour, email);
-                      //     },
-                      //     child:
-                      //     Text("אישור",
-                      //     ),
-                      //   ),
-                      // ),
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

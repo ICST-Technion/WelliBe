@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:wellibe_proj/screens/home/admin_home.dart';
 import 'package:wellibe_proj/services/auth.dart';
 import 'package:wellibe_proj/services/database.dart';
-import '../../assets/wellibe_colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'Login.dart';
+import 'package:wellibe_proj/assets/wellibe_colors.dart';
 
 class DRegisterScreen extends StatelessWidget {
-  DRegisterScreen();
-
   final AuthService _auth = AuthService();
 
+  // save details for the registered doctor
   String firstName = "";
-
   String familyName = "";
   String positionName = "";
   String speciality = "";
-
   String email = "";
-
   String password = "";
-
   String passwordAuth = "";
 
   final _formKey = GlobalKey<FormState>();
@@ -84,6 +78,8 @@ class DRegisterScreen extends StatelessWidget {
                                 if(val==null || val.trim().isEmpty){
                                   return 'הכנס שם פרטי';
                                 }
+
+                                // check for the validty of the doctors' name
                                 if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
                                   return 'שם לא חוקי';
                                 return null;
@@ -105,6 +101,8 @@ class DRegisterScreen extends StatelessWidget {
                                 if(val == null || val.trim().length == 0){
                                   return  'הכנס שם משפחה';
                                 }
+
+                                // check for validity of the doctors' family name
                                 if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
                                   return 'שם לא חוקי';
 
@@ -129,6 +127,8 @@ class DRegisterScreen extends StatelessWidget {
                                 if (val == null || val.trim().isEmpty) {
                                   return "הכנס כתובת מייל";
                                 }
+
+                                // check for validity of the doctors' email
                                 String pattern = r'\w+@\w+\.\w+';
                                 if (!RegExp(pattern).hasMatch(val.trim())) {
                                   return 'כתובת מייל לא חוקית';
@@ -154,8 +154,12 @@ class DRegisterScreen extends StatelessWidget {
                                 }
                                 if(val.trim().isEmpty)
                                   return 'הכנס סיסמה';
+
+                                // password must be longer then 6 letters
                                 if(val.trim().length < 6)
                                   return 'הסיסמה חייבת להיות באורך 6 תווים לפחות';
+
+                                // check for illegal letters
                                 for(int i=0; i< val.trim().length; i++){
                                   if(val.trim()[i] == '\'' || val.trim()[i] == '\;' || val.trim()[i] == ' ')
                                     return 'הוכנס תו לא חוקי בסיסמה';
@@ -178,10 +182,9 @@ class DRegisterScreen extends StatelessWidget {
                                   labelText: "אימות סיסמה"
                               ),
                               validator: (val){
-                                return (password != passwordAuth)? "סיסמה לא תואמת" : null;
+                                return (password != passwordAuth) ? "סיסמה לא תואמת" : null;
                               },
-                              onChanged: (val) => passwordAuth = val.trim()
-                              ,
+                              onChanged: (val) => passwordAuth = val.trim(),
                             ),
                           ),
                           Container(
@@ -195,6 +198,8 @@ class DRegisterScreen extends StatelessWidget {
                                 if(val == null || val.trim().length == 0){
                                   return  'הכנס תפקיד';
                                 }
+
+                                // check for the validity of the doctors' position
                                 if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
                                   return 'שם תפקיד לא חוקי';
 
@@ -216,6 +221,8 @@ class DRegisterScreen extends StatelessWidget {
                                 if(val == null || val.trim().length == 0){
                                   return null;
                                 }
+
+                                // check for validity of the doctors speciality
                                 if(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]').hasMatch(val.trim()))
                                   return 'תיאור מומחיות לא חוקי';
                                 return null;
