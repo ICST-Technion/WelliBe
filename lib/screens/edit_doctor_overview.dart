@@ -165,17 +165,29 @@ class _EditDoctorOverviewState extends State<EditDoctorOverview> {
                                     ),
                                   );
                                 }
+                                return GestureDetector(
+                                  onTap: (){
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 65,
+                                    backgroundColor: Colors.black,
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(snapshot.data!),
+                                      radius: 60,
+                                    ),
+                                  ),
+                                );
                               }
                               return GestureDetector(
                                 onTap: (){
                                 },
                                 child: CircleAvatar(
                                   radius: 65,
-                                  backgroundColor: Colors.black,
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(snapshot.data!),
-                                    radius: 60,
-                                  ),
+                                    backgroundColor: Colors.black,
+                                  // child: CircleAvatar(
+                                  //   backgroundImage: NetworkImage(snapshot.data!),
+                                  //   radius: 60,
+                                  // ),
                                 ),
                               );
                             }
