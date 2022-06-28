@@ -54,4 +54,7 @@ This requires:
 
 ## Testing
 ---
-
+We run the tests using the command `flutter-tests`.
+Each test checks a different part of the authentication and database operations. Such as:
+* Edit personal information.
+* Create new accounts.
